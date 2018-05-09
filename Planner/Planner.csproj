@@ -101,5 +101,8 @@
   <ItemGroup>
     <None Include="Resources\Cancel_16x.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\AddControl_16x.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

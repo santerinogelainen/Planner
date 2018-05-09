@@ -12,20 +12,52 @@ namespace Planner
 {
 		public partial class MainWindow : Form
 		{
+
+				public Plan OpenPlan { get; set; }
+
 				public MainWindow()
 				{
 						InitializeComponent();
 				}
 
-				public void LoadPlan(Object sender, TreeViewEventArgs e)
+				public void SelectPlan(Object sender, TreeViewEventArgs e)
 				{
 						CustomNode node = (CustomNode)e.Node;
 						if (node.NodeType == TreeNodeType.Plan)
 						{
+								OpenPlan = ((PlanNode)node).Plan;
 								PlanName.Text = node.Text;
 								DesignerPanel.Controls.Clear();
-								DesignerPanel.Controls.Add(((PlanNode)node).Plan);
+								DesignerPanel.Controls.Add(OpenPlan);
 						}
+				}
+
+				public void UpdateTitle(Object sender, EventArgs e)
+				{
+						if (OpenPlan != null)
+						{
+								if (OpenPlan.SelectedContainer != null)
+								{
+										OpenPlan.SelectedContainer.SetTitle(((Control)sender).Text);
+								}
+						}
+				}
+
+				public void UpdateText(Object sender, EventArgs e)
+				{
+						if (OpenPlan != null)
+						{
+								if (OpenPlan.SelectedContainer != null)
+								{
+										OpenPlan.SelectedContainer.SetText(((RichTextBox)sender).Text);
+								}
+						}
+				}
+
+				public void SetProperties(Container selected)
+				{
+						EditTitle.Text = selected.Title;
+						EditText.Text = selected.ContainerText;
 				}
 
 				public void OpenFolderIcon(Object sender, TreeViewCancelEventArgs e)
@@ -60,6 +92,15 @@ namespace Planner
 						}
 				}
 
+				public void CloseOpenPlan()
+				{
+						if (OpenPlan != null)
+						{
+								PlanName.Text = "";
+								DesignerPanel.Controls.Clear();
+						}
+				}
+
 				public void NewFolder(Object sender, EventArgs e)
 				{
 						FindParentAndAdd(TreeNodeType.Folder);
@@ -70,12 +111,21 @@ namespace Planner
 						FindParentAndAdd(TreeNodeType.Plan);
 				}
 
+				public void AddContainer(Object sender, EventArgs e)
+				{
+						if (DesignerPanel.Controls.OfType<Plan>().ToList()[0] != null)
+						{
+								DesignerPanel.Controls.OfType<Plan>().ToList()[0].AddContainer();
+						}
+				}
+
 				public CustomNode GetNodeFromType(TreeNodeType type)
 				{
 						if (type == TreeNodeType.Plan)
 						{
 								PlanNode node = new PlanNode(type.ToString(), new Plan());
-								node.Plan.AddChild(new Container(type.ToString()));
+								node.Plan.OnSelectContainer += SetProperties;
+								node.Plan.AddContainer(type.ToString());
 								return node;
 						}
 						return new CustomNode(type.ToString(), type);
@@ -91,7 +141,7 @@ namespace Planner
 
 						if (((CustomNode)FileTree.SelectedNode).NodeType == TreeNodeType.Folder)
 						{
-								FileTree.Nodes.Add(GetNodeFromType(type));
+								FileTree.SelectedNode.Nodes.Add(GetNodeFromType(type));
 								FileTree.SelectedNode.Expand();
 						}
 						else
