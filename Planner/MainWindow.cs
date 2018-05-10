@@ -20,6 +20,11 @@ namespace Planner
 						InitializeComponent();
 				}
 
+				public void DeleteSelectedContainer(Object sender, EventArgs e)
+				{
+						OpenPlan.DeleteSelectedContainer();
+				}
+
 				public void SelectPlan(Object sender, TreeViewEventArgs e)
 				{
 						CustomNode node = (CustomNode)e.Node;
