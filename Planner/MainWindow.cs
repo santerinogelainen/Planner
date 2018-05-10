@@ -18,6 +18,12 @@ namespace Planner
 				public MainWindow()
 				{
 						InitializeComponent();
+						FileTree.LabelEdit = true;
+						FileTree.DoubleClick += (Object sender, EventArgs e) =>
+						{
+								FileTree.SelectedNode.BeginEdit();
+						};
+						FileTree.AfterLabelEdit += UpdateDesignerTitle;
 				}
 
 				public void DeleteSelectedContainer(Object sender, EventArgs e)
@@ -97,6 +103,17 @@ namespace Planner
 						}
 				}
 
+				public void UpdateDesignerTitle(Object sender, NodeLabelEditEventArgs e)
+				{
+						if (e.Node is PlanNode)
+						{
+								if (((PlanNode)e.Node).Plan == OpenPlan)
+								{
+										PlanName.Text = e.Label;
+								}
+						}
+				}
+
 				public void CloseOpenPlan()
 				{
 						if (OpenPlan != null)
@@ -130,7 +147,7 @@ namespace Planner
 						{
 								PlanNode node = new PlanNode(type.ToString(), new Plan());
 								node.Plan.OnSelectContainer += SetProperties;
-								node.Plan.AddContainer(type.ToString());
+								node.Plan.AddContainer();
 								return node;
 						}
 						return new CustomNode(type.ToString(), type);
@@ -140,14 +157,20 @@ namespace Planner
 				{
 						if (FileTree.SelectedNode == null)
 						{
-								FileTree.Nodes.Add(GetNodeFromType(type));
+								CustomNode node = GetNodeFromType(type);
+								FileTree.Nodes.Add(node);
+								FileTree.SelectedNode = node;
+								FileTree.SelectedNode.BeginEdit();
 								return;
 						}
 
 						if (((CustomNode)FileTree.SelectedNode).NodeType == TreeNodeType.Folder)
 						{
-								FileTree.SelectedNode.Nodes.Add(GetNodeFromType(type));
+								CustomNode node = GetNodeFromType(type);
+								FileTree.SelectedNode.Nodes.Add(node);
 								FileTree.SelectedNode.Expand();
+								FileTree.SelectedNode = node;
+								FileTree.SelectedNode.BeginEdit();
 						}
 						else
 						{
