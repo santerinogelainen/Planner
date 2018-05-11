@@ -9,6 +9,18 @@ using System.Diagnostics;
 
 namespace Planner
 {
+		public enum ContainerRenderMode
+		{
+				/// <summary>
+				/// Render children in a linear fashion, child location cannot be changed inside the container
+				/// </summary>
+				Linear,
+				/// <summary>
+				/// Render children in a relative mode (relative to parent), child location can be changed freely
+				/// </summary>
+				Relative
+		}
+
 		public class Container : BaseContainer
 		{
 
@@ -27,6 +39,8 @@ namespace Planner
 				private Point MouseDownLocation { get; set; }
 				private bool Dragging { get; set; }
 
+				public ContainerRenderMode RenderMode { get; private set; }
+
 				private Label TitleLabel { get; set; }
 				public string Title { get; private set; }
 
@@ -35,6 +49,9 @@ namespace Planner
 
 				public Container(string title = "") : base()
 				{
+						// default render mode
+						RenderMode = ContainerRenderMode.Relative;
+						DuringRender += AdjustRenderedChild;
 						Padding = new Padding(5);
 
 						TitleLabel = new Label();
@@ -44,6 +61,7 @@ namespace Planner
 						TitleLabel.MouseUp += StopDragging;
 						TitleLabel.MouseDown += StartDragging;
 						TitleLabel.AutoSize = true;
+						TitleLabel.Padding = new Padding(0, 0, 0, 5);
 						SetTitle(title);
 
 						TextLabel = new Label();
@@ -51,7 +69,9 @@ namespace Planner
 						TextLabel.MouseMove += Drag;
 						TextLabel.MouseUp += StopDragging;
 						TextLabel.MouseDown += StartDragging;
+						TextLabel.Padding = new Padding(0, 0, 0, 5);
 						TextLabel.AutoSize = true;
+						TextLabel.Visible = false;
 						
 						UpdateLabelSizes();
 
@@ -73,6 +93,14 @@ namespace Planner
 						MouseMove += Drag;
 						MouseDown += StartDragging;
 						MouseUp += StopDragging;
+				}
+
+				private void AdjustRenderedChild(BaseContainer child)
+				{
+						if (RenderMode == ContainerRenderMode.Linear)
+						{
+								child.Dock = DockStyle.Top;
+						}
 				}
 
 				private void UpdateLabelSizes()
@@ -97,9 +125,16 @@ namespace Planner
 
 				public void StartDragging(Object sender, MouseEventArgs e)
 				{
+						Dock = DockStyle.None;
 						MouseDownLocation = e.Location;
 						Dragging = true;
 						OnStartDragging?.Invoke(this);
+				}
+
+				public void ChangeRenderMode(ContainerRenderMode mode)
+				{
+						RenderMode = mode;
+						RenderChildren();
 				}
 
 				public void StopDragging(Object sender, MouseEventArgs e)
@@ -122,12 +157,16 @@ namespace Planner
 				{
 						ContainerText = newtext;
 						TextLabel.Text = ContainerText;
+						// show textlabel if its not empty, hide it if it is empty
+						TextLabel.Visible = newtext != "";
 				}
 
 				public void SetTitle(string newtitle)
 				{
 						Title = newtitle;
 						TitleLabel.Text = Title;
+						// show titlelabel if its not empty, hide it if it is empty
+						TitleLabel.Visible = newtitle != "";
 				}
 
 				public void MoveTo(IContainer newParent)

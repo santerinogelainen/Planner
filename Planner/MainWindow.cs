@@ -69,6 +69,17 @@ namespace Planner
 				{
 						EditTitle.Text = selected.Title;
 						EditText.Text = selected.ContainerText;
+						switch (selected.RenderMode)
+						{
+								case ContainerRenderMode.Relative:
+										RenderModeRelative.Checked = true;
+										RenderModeLinear.Checked = false;
+										break;
+								case ContainerRenderMode.Linear:
+										RenderModeRelative.Checked = false;
+										RenderModeLinear.Checked = true;
+										break;
+						}
 				}
 
 				public void OpenFolderIcon(Object sender, TreeViewCancelEventArgs e)
@@ -151,6 +162,30 @@ namespace Planner
 								return node;
 						}
 						return new CustomNode(type.ToString(), type);
+				}
+
+				private void ChangeSelectedRenderMode(RadioButton sender, ContainerRenderMode mode)
+				{
+						if (OpenPlan != null)
+						{
+								if (OpenPlan.SelectedContainer != null)
+								{
+										if (sender.Checked)
+										{
+												OpenPlan.SelectedContainer.ChangeRenderMode(mode);
+										}
+								}
+						}
+				}
+
+				public void RenderModeToRelative(Object sender, EventArgs e)
+				{
+						ChangeSelectedRenderMode((RadioButton)sender, ContainerRenderMode.Relative);
+				}
+
+				public void RenderModeToLinear(Object sender, EventArgs e)
+				{
+						ChangeSelectedRenderMode((RadioButton)sender, ContainerRenderMode.Linear);
 				}
 
 				public void FindParentAndAdd(TreeNodeType type)

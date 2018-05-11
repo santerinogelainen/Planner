@@ -12,6 +12,7 @@ namespace Planner
 		public class BaseContainer : Panel, IContainer
 		{
 				public event Action BeforeRender;
+				public event Action<BaseContainer> DuringRender;
 				public event Action AfterRender;
 
 				public IContainer ParentContainer { get; set; }
@@ -42,7 +43,7 @@ namespace Planner
 						return (Visible && ClientRectangle.Contains(PointToClient(pos)));
 				}
 
-				private void RenderChildren()
+				protected void RenderChildren()
 				{
 						Controls.Clear();
 						BeforeRender?.Invoke();
@@ -51,6 +52,7 @@ namespace Planner
 								container.RenderChildren();
 								Controls.Add(container);
 								container.BringToFront();
+								DuringRender?.Invoke(container);
 						}
 						AfterRender?.Invoke();
 				}
