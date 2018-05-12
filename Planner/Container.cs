@@ -100,6 +100,7 @@ namespace Planner
 						if (RenderMode == ContainerRenderMode.Linear)
 						{
 								child.Dock = DockStyle.Top;
+								child.Size = new Size(child.ClientSize.Width, child.Size.Height);
 						}
 				}
 

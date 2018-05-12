@@ -120,7 +120,13 @@ namespace Planner
 						{
 								if (((PlanNode)e.Node).Plan == OpenPlan)
 								{
-										PlanName.Text = e.Label;
+										if (e.Label == null)
+										{
+												PlanName.Text = e.Node.Text;
+										} else
+										{
+												PlanName.Text = e.Label;
+										}
 								}
 						}
 				}

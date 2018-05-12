@@ -16,6 +16,7 @@ namespace Planner
 				public event Action<Container> OnSelectContainer;
 
 				public Container SelectedContainer { get; private set; }
+				//public PlaceHolder PlaceHolder { get; set; }
 
 				public Plan() : base()
 				{
@@ -65,6 +66,18 @@ namespace Planner
 						MoveSelectedToThis((BaseContainer)SelectedContainer.ParentContainer);
 						OnSelectContainer?.Invoke(SelectedContainer);
 				}
+
+				/*private void PutPlaceHolder(Container replace)
+				{
+						PlaceHolder = new PlaceHolder();
+						PlaceHolder.BackColor = Color.Red;
+						PlaceHolder.ClientSize = replace.ClientSize;
+						PlaceHolder.Location = replace.Location;
+						BaseContainer parent = (BaseContainer)replace.ParentContainer;
+						parent.AddChild(PlaceHolder);
+						parent.Controls.SetChildIndex(PlaceHolder, parent.Controls.IndexOf(replace));
+						PlaceHolder.ParentContainer = parent;
+				}*/
 
 				public void AddContainer(string title = "")
 				{
