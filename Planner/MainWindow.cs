@@ -24,11 +24,26 @@ namespace Planner
 								FileTree.SelectedNode.BeginEdit();
 						};
 						FileTree.AfterLabelEdit += UpdateDesignerTitle;
+						DisableProperties();
 				}
 
 				public void DeleteSelectedContainer(Object sender, EventArgs e)
 				{
-						OpenPlan.DeleteSelectedContainer();
+						if (OpenPlan != null)
+						{
+								OpenPlan.DeleteSelectedContainer();
+								DisableProperties();
+						}
+				}
+
+				public void DisableProperties()
+				{
+						PropertiesWrapper.Visible = false;
+				}
+
+				public void EnableProperties()
+				{
+						PropertiesWrapper.Visible = true;
 				}
 
 				public void SelectPlan(Object sender, TreeViewEventArgs e)
@@ -67,6 +82,7 @@ namespace Planner
 
 				public void SetProperties(Container selected)
 				{
+						EnableProperties();
 						EditTitle.Text = selected.Title;
 						EditText.Text = selected.ContainerText;
 						switch (selected.RenderMode)
@@ -110,6 +126,7 @@ namespace Planner
 								if (dialogResult == DialogResult.Yes)
 								{
 										FileTree.SelectedNode.Remove();
+										CloseOpenPlan();
 								}
 						}
 				}
@@ -135,8 +152,10 @@ namespace Planner
 				{
 						if (OpenPlan != null)
 						{
+								OpenPlan = null;
 								PlanName.Text = "";
 								DesignerPanel.Controls.Clear();
+								DisableProperties();
 						}
 				}
 
@@ -152,9 +171,12 @@ namespace Planner
 
 				public void AddContainer(Object sender, EventArgs e)
 				{
-						if (DesignerPanel.Controls.OfType<Plan>().ToList()[0] != null)
+						if (OpenPlan != null)
 						{
-								DesignerPanel.Controls.OfType<Plan>().ToList()[0].AddContainer();
+								if (DesignerPanel.Controls.OfType<Plan>().ToList()[0] != null)
+								{
+										DesignerPanel.Controls.OfType<Plan>().ToList()[0].AddContainer();
+								}
 						}
 				}
 

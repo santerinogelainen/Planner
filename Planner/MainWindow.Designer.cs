@@ -54,12 +54,14 @@
 						this.ToolStrip = new System.Windows.Forms.ToolStrip();
 						this.NewProjectButton = new System.Windows.Forms.ToolStripButton();
 						this.OpenProjectButton = new System.Windows.Forms.ToolStripButton();
+						this.PropertiesWrapper = new System.Windows.Forms.Panel();
 						this.FilePanel.SuspendLayout();
 						this.FileToolStrip.SuspendLayout();
 						this.DesignerTools.SuspendLayout();
 						this.PropertiesPanel.SuspendLayout();
 						this.RenderModeGroup.SuspendLayout();
 						this.ToolStrip.SuspendLayout();
+						this.PropertiesWrapper.SuspendLayout();
 						this.SuspendLayout();
 						// 
 						// FilePanel
@@ -138,6 +140,7 @@
 						// 
 						// DesignerPanel
 						// 
+						this.DesignerPanel.AutoScroll = true;
 						this.DesignerPanel.Dock = System.Windows.Forms.DockStyle.Fill;
 						this.DesignerPanel.Location = new System.Drawing.Point(222, 25);
 						this.DesignerPanel.Name = "DesignerPanel";
@@ -185,23 +188,19 @@
 						// 
 						// PropertiesPanel
 						// 
-						this.PropertiesPanel.Controls.Add(this.EditText);
-						this.PropertiesPanel.Controls.Add(this.TextLableProperties);
-						this.PropertiesPanel.Controls.Add(this.RenderModeGroup);
-						this.PropertiesPanel.Controls.Add(this.EditTitle);
-						this.PropertiesPanel.Controls.Add(this.TitleLabelProperties);
+						this.PropertiesPanel.Controls.Add(this.PropertiesWrapper);
 						this.PropertiesPanel.Controls.Add(this.PropertiesPanelLabel);
 						this.PropertiesPanel.Dock = System.Windows.Forms.DockStyle.Right;
 						this.PropertiesPanel.Location = new System.Drawing.Point(571, 25);
 						this.PropertiesPanel.Name = "PropertiesPanel";
-						this.PropertiesPanel.Padding = new System.Windows.Forms.Padding(5, 5, 5, 5);
+						this.PropertiesPanel.Padding = new System.Windows.Forms.Padding(5);
 						this.PropertiesPanel.Size = new System.Drawing.Size(229, 425);
 						this.PropertiesPanel.TabIndex = 0;
 						// 
 						// EditText
 						// 
 						this.EditText.Dock = System.Windows.Forms.DockStyle.Fill;
-						this.EditText.Location = new System.Drawing.Point(5, 128);
+						this.EditText.Location = new System.Drawing.Point(0, 105);
 						this.EditText.Name = "EditText";
 						this.EditText.Size = new System.Drawing.Size(219, 292);
 						this.EditText.TabIndex = 4;
@@ -212,7 +211,7 @@
 						// 
 						this.TextLableProperties.AutoSize = true;
 						this.TextLableProperties.Dock = System.Windows.Forms.DockStyle.Top;
-						this.TextLableProperties.Location = new System.Drawing.Point(5, 105);
+						this.TextLableProperties.Location = new System.Drawing.Point(0, 82);
 						this.TextLableProperties.Name = "TextLableProperties";
 						this.TextLableProperties.Padding = new System.Windows.Forms.Padding(0, 10, 0, 0);
 						this.TextLableProperties.Size = new System.Drawing.Size(31, 23);
@@ -224,10 +223,10 @@
 						this.RenderModeGroup.Controls.Add(this.RenderModeLinear);
 						this.RenderModeGroup.Controls.Add(this.RenderModeRelative);
 						this.RenderModeGroup.Dock = System.Windows.Forms.DockStyle.Top;
-						this.RenderModeGroup.Location = new System.Drawing.Point(5, 66);
-						this.RenderModeGroup.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+						this.RenderModeGroup.Location = new System.Drawing.Point(0, 43);
+						this.RenderModeGroup.Margin = new System.Windows.Forms.Padding(2);
 						this.RenderModeGroup.Name = "RenderModeGroup";
-						this.RenderModeGroup.Padding = new System.Windows.Forms.Padding(4, 4, 4, 4);
+						this.RenderModeGroup.Padding = new System.Windows.Forms.Padding(4);
 						this.RenderModeGroup.Size = new System.Drawing.Size(219, 39);
 						this.RenderModeGroup.TabIndex = 6;
 						this.RenderModeGroup.TabStop = false;
@@ -237,7 +236,7 @@
 						// 
 						this.RenderModeLinear.AutoSize = true;
 						this.RenderModeLinear.Location = new System.Drawing.Point(70, 19);
-						this.RenderModeLinear.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+						this.RenderModeLinear.Margin = new System.Windows.Forms.Padding(2);
 						this.RenderModeLinear.Name = "RenderModeLinear";
 						this.RenderModeLinear.Size = new System.Drawing.Size(54, 17);
 						this.RenderModeLinear.TabIndex = 1;
@@ -250,7 +249,7 @@
 						// 
 						this.RenderModeRelative.AutoSize = true;
 						this.RenderModeRelative.Location = new System.Drawing.Point(6, 19);
-						this.RenderModeRelative.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+						this.RenderModeRelative.Margin = new System.Windows.Forms.Padding(2);
 						this.RenderModeRelative.Name = "RenderModeRelative";
 						this.RenderModeRelative.Size = new System.Drawing.Size(64, 17);
 						this.RenderModeRelative.TabIndex = 0;
@@ -262,7 +261,7 @@
 						// EditTitle
 						// 
 						this.EditTitle.Dock = System.Windows.Forms.DockStyle.Top;
-						this.EditTitle.Location = new System.Drawing.Point(5, 46);
+						this.EditTitle.Location = new System.Drawing.Point(0, 23);
 						this.EditTitle.Name = "EditTitle";
 						this.EditTitle.Size = new System.Drawing.Size(219, 20);
 						this.EditTitle.TabIndex = 1;
@@ -272,7 +271,7 @@
 						// 
 						this.TitleLabelProperties.AutoSize = true;
 						this.TitleLabelProperties.Dock = System.Windows.Forms.DockStyle.Top;
-						this.TitleLabelProperties.Location = new System.Drawing.Point(5, 23);
+						this.TitleLabelProperties.Location = new System.Drawing.Point(0, 0);
 						this.TitleLabelProperties.Name = "TitleLabelProperties";
 						this.TitleLabelProperties.Padding = new System.Windows.Forms.Padding(0, 10, 0, 0);
 						this.TitleLabelProperties.Size = new System.Drawing.Size(30, 23);
@@ -320,6 +319,19 @@
 						this.OpenProjectButton.Size = new System.Drawing.Size(80, 22);
 						this.OpenProjectButton.Text = "Open Project";
 						// 
+						// PropertiesWrapper
+						// 
+						this.PropertiesWrapper.Controls.Add(this.EditText);
+						this.PropertiesWrapper.Controls.Add(this.TextLableProperties);
+						this.PropertiesWrapper.Controls.Add(this.RenderModeGroup);
+						this.PropertiesWrapper.Controls.Add(this.EditTitle);
+						this.PropertiesWrapper.Controls.Add(this.TitleLabelProperties);
+						this.PropertiesWrapper.Dock = System.Windows.Forms.DockStyle.Fill;
+						this.PropertiesWrapper.Location = new System.Drawing.Point(5, 23);
+						this.PropertiesWrapper.Name = "PropertiesWrapper";
+						this.PropertiesWrapper.Size = new System.Drawing.Size(219, 397);
+						this.PropertiesWrapper.TabIndex = 0;
+						// 
 						// MainWindow
 						// 
 						this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -345,6 +357,8 @@
 						this.RenderModeGroup.PerformLayout();
 						this.ToolStrip.ResumeLayout(false);
 						this.ToolStrip.PerformLayout();
+						this.PropertiesWrapper.ResumeLayout(false);
+						this.PropertiesWrapper.PerformLayout();
 						this.ResumeLayout(false);
 						this.PerformLayout();
 
@@ -376,6 +390,7 @@
 				private System.Windows.Forms.GroupBox RenderModeGroup;
 				private System.Windows.Forms.RadioButton RenderModeLinear;
 				private System.Windows.Forms.RadioButton RenderModeRelative;
+				private System.Windows.Forms.Panel PropertiesWrapper;
 		}
 }
 
