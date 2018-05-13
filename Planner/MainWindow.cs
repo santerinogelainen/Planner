@@ -14,12 +14,25 @@ namespace Planner
 {
 		public partial class MainWindow : Form
 		{
+				public string projectName;
 
+				public string ProjectName {
+						get {
+								return projectName;
+						}
+						set {
+								projectName = value;
+								Text = value;
+						}
+				}
+				public string ProjectPath { get; set; }
+				public bool ProjectIsOpen { get; set; }
 				public Plan OpenPlan { get; set; }
 
 				public MainWindow()
 				{
 						InitializeComponent();
+						ProjectIsOpen = false;
 						FileTree.LabelEdit = true;
 						FileTree.DoubleClick += (Object sender, EventArgs e) =>
 						{
@@ -29,6 +42,13 @@ namespace Planner
 						DisableProperties();
 				}
 
+				public MainWindow(string name, string path) : this()
+				{
+						ProjectName = name;
+						ProjectPath = path;
+						ProjectIsOpen = true;
+				}
+
 				public void DeleteSelectedContainer(Object sender, EventArgs e)
 				{
 						if (OpenPlan != null)
@@ -36,6 +56,25 @@ namespace Planner
 								OpenPlan.DeleteSelectedContainer();
 								DisableProperties();
 						}
+				}
+
+				public void NewProject(Object sender, EventArgs e)
+				{
+						NewProjectForm projectSettings = new NewProjectForm();
+						projectSettings.StartPosition = FormStartPosition.CenterParent;
+						projectSettings.OnOk += (string name, string path) =>
+						{
+								if (ProjectIsOpen)
+								{
+								}
+								else
+								{
+										ProjectName = name;
+										ProjectPath = path;
+										ProjectIsOpen = true;
+								}
+						};
+						projectSettings.ShowDialog(this);
 				}
 
 				public void SelectPlan(Object sender, TreeViewEventArgs e)

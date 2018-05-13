@@ -31,6 +31,7 @@
 						this.components = new System.ComponentModel.Container();
 						System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindow));
 						this.FilePanel = new System.Windows.Forms.Panel();
+						this.FileTree = new Planner.PlanTree();
 						this.FileTreeImages = new System.Windows.Forms.ImageList(this.components);
 						this.FileToolStrip = new System.Windows.Forms.ToolStrip();
 						this.NewPlanButton = new System.Windows.Forms.ToolStripButton();
@@ -59,7 +60,6 @@
 						this.ProjectSaveSeparator = new System.Windows.Forms.ToolStripSeparator();
 						this.SaveButton = new System.Windows.Forms.ToolStripMenuItem();
 						this.SaveAsButton = new System.Windows.Forms.ToolStripMenuItem();
-						this.FileTree = new Planner.PlanTree();
 						this.FilePanel.SuspendLayout();
 						this.FileToolStrip.SuspendLayout();
 						this.DesignerTools.SuspendLayout();
@@ -78,6 +78,18 @@
 						this.FilePanel.Name = "FilePanel";
 						this.FilePanel.Size = new System.Drawing.Size(222, 425);
 						this.FilePanel.TabIndex = 0;
+						// 
+						// FileTree
+						// 
+						this.FileTree.Dock = System.Windows.Forms.DockStyle.Fill;
+						this.FileTree.ImageIndex = 0;
+						this.FileTree.ImageList = this.FileTreeImages;
+						this.FileTree.Location = new System.Drawing.Point(0, 25);
+						this.FileTree.Name = "FileTree";
+						this.FileTree.SelectedImageIndex = 0;
+						this.FileTree.Size = new System.Drawing.Size(222, 400);
+						this.FileTree.TabIndex = 3;
+						this.FileTree.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.SelectPlan);
 						// 
 						// FileTreeImages
 						// 
@@ -340,6 +352,7 @@
 						this.NewProjectButton.Name = "NewProjectButton";
 						this.NewProjectButton.Size = new System.Drawing.Size(144, 22);
 						this.NewProjectButton.Text = "New Project";
+						this.NewProjectButton.Click += new System.EventHandler(this.NewProject);
 						// 
 						// OpenProjectButton
 						// 
@@ -368,18 +381,6 @@
 						this.SaveAsButton.Name = "SaveAsButton";
 						this.SaveAsButton.Size = new System.Drawing.Size(144, 22);
 						this.SaveAsButton.Text = "Save As";
-						// 
-						// FileTree
-						// 
-						this.FileTree.Dock = System.Windows.Forms.DockStyle.Fill;
-						this.FileTree.ImageIndex = 0;
-						this.FileTree.ImageList = this.FileTreeImages;
-						this.FileTree.Location = new System.Drawing.Point(0, 25);
-						this.FileTree.Name = "FileTree";
-						this.FileTree.SelectedImageIndex = 0;
-						this.FileTree.Size = new System.Drawing.Size(222, 400);
-						this.FileTree.TabIndex = 3;
-						this.FileTree.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.SelectPlan);
 						// 
 						// MainWindow
 						// 
