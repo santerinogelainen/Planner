@@ -6,10 +6,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml.Linq;
 
 namespace Planner
 {
-		public class BaseContainer : Panel, IContainer
+		public class BaseContainer : Panel, IContainer, IXMLTransformable
 		{
 				public event Action BeforeRender;
 				public event Action<BaseContainer> DuringRender;
@@ -69,6 +70,16 @@ namespace Planner
 						container.ParentContainer = null;
 						Children.Remove(container);
 						RenderChildren();
+				}
+
+				public virtual XElement ToXML()
+				{
+						XElement thisContainer = new XElement(GetType().Name);
+						foreach (BaseContainer child in Children)
+						{
+								thisContainer.Add(child.ToXML());
+						}
+						return thisContainer;
 				}
 		}
 }

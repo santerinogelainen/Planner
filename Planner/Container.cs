@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Drawing;
 using System.Windows.Forms;
 using System.Diagnostics;
+using System.Xml.Linq;
 
 namespace Planner
 {
@@ -21,7 +22,7 @@ namespace Planner
 				Relative
 		}
 
-		public class Container : BaseContainer
+		public class Container : BaseContainer, IXMLTransformable
 		{
 
 				public event Action<Object> OnStartDragging;
@@ -72,6 +73,7 @@ namespace Planner
 						TextLabel.Padding = new Padding(0, 0, 0, 5);
 						TextLabel.AutoSize = true;
 						TextLabel.Visible = false;
+						SetText("");
 						
 						UpdateLabelSizes();
 
@@ -179,5 +181,20 @@ namespace Planner
 						newParent.AddChild(this);
 				}
 
+				public override XElement ToXML()
+				{
+						XElement xml = base.ToXML();
+						xml.Add(new XAttribute("location", Location.X + "," + Location.Y));
+						xml.Add(new XAttribute("renderMode", RenderMode));
+						if (Title != "")
+						{
+								xml.Add(new XAttribute("title", Title));
+						}
+						if (ContainerText != "")
+						{
+								xml.Add(new XAttribute("text", ContainerText));
+						}
+						return xml;
+				}
 		}
 }

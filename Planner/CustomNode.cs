@@ -4,10 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml.Linq;
 
 namespace Planner
 {
-		public class CustomNode : TreeNode
+		public class CustomNode : TreeNode, IXMLTransformable
 		{
 				public TreeNodeType NodeType { get; set; }
 
@@ -29,6 +30,18 @@ namespace Planner
 										return 2;
 						}
 						return 2;
+				}
+
+				public virtual XElement ToXML()
+				{
+						XElement node = new XElement("Node");
+						node.Add(new XAttribute("type", NodeType));
+						node.Add(new XAttribute("name", Text));
+						foreach (CustomNode childNode in Nodes)
+						{
+								node.Add(childNode.ToXML());
+						}
+						return node;
 				}
 		}
 }

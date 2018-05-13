@@ -31,12 +31,16 @@
 						this.components = new System.ComponentModel.Container();
 						System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindow));
 						this.FilePanel = new System.Windows.Forms.Panel();
-						this.FileTree = new System.Windows.Forms.TreeView();
 						this.FileTreeImages = new System.Windows.Forms.ImageList(this.components);
 						this.FileToolStrip = new System.Windows.Forms.ToolStrip();
+						this.NewPlanButton = new System.Windows.Forms.ToolStripButton();
+						this.NewFolderButton = new System.Windows.Forms.ToolStripButton();
+						this.DeleteButton = new System.Windows.Forms.ToolStripButton();
 						this.DesignerPanel = new System.Windows.Forms.Panel();
 						this.DesignerTools = new System.Windows.Forms.ToolStrip();
 						this.PlanName = new System.Windows.Forms.ToolStripLabel();
+						this.NewContainer = new System.Windows.Forms.ToolStripButton();
+						this.DeleteContainer = new System.Windows.Forms.ToolStripButton();
 						this.PropertiesPanel = new System.Windows.Forms.Panel();
 						this.PropertiesWrapper = new System.Windows.Forms.Panel();
 						this.EditText = new System.Windows.Forms.RichTextBox();
@@ -48,11 +52,6 @@
 						this.TitleLabelProperties = new System.Windows.Forms.Label();
 						this.PropertiesPanelLabel = new System.Windows.Forms.Label();
 						this.ToolStrip = new System.Windows.Forms.ToolStrip();
-						this.NewContainer = new System.Windows.Forms.ToolStripButton();
-						this.DeleteContainer = new System.Windows.Forms.ToolStripButton();
-						this.NewPlanButton = new System.Windows.Forms.ToolStripButton();
-						this.NewFolderButton = new System.Windows.Forms.ToolStripButton();
-						this.DeleteButton = new System.Windows.Forms.ToolStripButton();
 						this.SmallSaveButton = new System.Windows.Forms.ToolStripButton();
 						this.FileDropDown = new System.Windows.Forms.ToolStripDropDownButton();
 						this.NewProjectButton = new System.Windows.Forms.ToolStripMenuItem();
@@ -60,6 +59,7 @@
 						this.ProjectSaveSeparator = new System.Windows.Forms.ToolStripSeparator();
 						this.SaveButton = new System.Windows.Forms.ToolStripMenuItem();
 						this.SaveAsButton = new System.Windows.Forms.ToolStripMenuItem();
+						this.FileTree = new Planner.PlanTree();
 						this.FilePanel.SuspendLayout();
 						this.FileToolStrip.SuspendLayout();
 						this.DesignerTools.SuspendLayout();
@@ -78,20 +78,6 @@
 						this.FilePanel.Name = "FilePanel";
 						this.FilePanel.Size = new System.Drawing.Size(222, 425);
 						this.FilePanel.TabIndex = 0;
-						// 
-						// FileTree
-						// 
-						this.FileTree.Dock = System.Windows.Forms.DockStyle.Fill;
-						this.FileTree.ImageIndex = 0;
-						this.FileTree.ImageList = this.FileTreeImages;
-						this.FileTree.Location = new System.Drawing.Point(0, 25);
-						this.FileTree.Name = "FileTree";
-						this.FileTree.SelectedImageIndex = 0;
-						this.FileTree.Size = new System.Drawing.Size(222, 400);
-						this.FileTree.TabIndex = 1;
-						this.FileTree.BeforeCollapse += new System.Windows.Forms.TreeViewCancelEventHandler(this.CloseFolderIcon);
-						this.FileTree.BeforeExpand += new System.Windows.Forms.TreeViewCancelEventHandler(this.OpenFolderIcon);
-						this.FileTree.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.SelectPlan);
 						// 
 						// FileTreeImages
 						// 
@@ -112,6 +98,39 @@
 						this.FileToolStrip.Name = "FileToolStrip";
 						this.FileToolStrip.Size = new System.Drawing.Size(222, 25);
 						this.FileToolStrip.TabIndex = 2;
+						// 
+						// NewPlanButton
+						// 
+						this.NewPlanButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+						this.NewPlanButton.Image = global::Planner.Properties.Resources.AddFile_16x;
+						this.NewPlanButton.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+						this.NewPlanButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+						this.NewPlanButton.Name = "NewPlanButton";
+						this.NewPlanButton.Size = new System.Drawing.Size(23, 22);
+						this.NewPlanButton.ToolTipText = "New Plan";
+						this.NewPlanButton.Click += new System.EventHandler(this.NewPlan);
+						// 
+						// NewFolderButton
+						// 
+						this.NewFolderButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+						this.NewFolderButton.Image = global::Planner.Properties.Resources.AddFolder_16x;
+						this.NewFolderButton.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+						this.NewFolderButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+						this.NewFolderButton.Name = "NewFolderButton";
+						this.NewFolderButton.Size = new System.Drawing.Size(23, 22);
+						this.NewFolderButton.ToolTipText = "New Folder";
+						this.NewFolderButton.Click += new System.EventHandler(this.NewFolder);
+						// 
+						// DeleteButton
+						// 
+						this.DeleteButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+						this.DeleteButton.Image = global::Planner.Properties.Resources.Cancel_16x;
+						this.DeleteButton.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+						this.DeleteButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+						this.DeleteButton.Name = "DeleteButton";
+						this.DeleteButton.Size = new System.Drawing.Size(23, 22);
+						this.DeleteButton.ToolTipText = "Remove Folder/Plan";
+						this.DeleteButton.Click += new System.EventHandler(this.RemoveNode);
 						// 
 						// DesignerPanel
 						// 
@@ -139,6 +158,29 @@
 						// 
 						this.PlanName.Name = "PlanName";
 						this.PlanName.Size = new System.Drawing.Size(0, 22);
+						// 
+						// NewContainer
+						// 
+						this.NewContainer.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+						this.NewContainer.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+						this.NewContainer.Image = global::Planner.Properties.Resources.AddControl_16x;
+						this.NewContainer.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+						this.NewContainer.ImageTransparentColor = System.Drawing.Color.Magenta;
+						this.NewContainer.Name = "NewContainer";
+						this.NewContainer.Size = new System.Drawing.Size(23, 22);
+						this.NewContainer.ToolTipText = "New Container";
+						this.NewContainer.Click += new System.EventHandler(this.AddContainer);
+						// 
+						// DeleteContainer
+						// 
+						this.DeleteContainer.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+						this.DeleteContainer.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+						this.DeleteContainer.Image = global::Planner.Properties.Resources.Cancel_16x;
+						this.DeleteContainer.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+						this.DeleteContainer.ImageTransparentColor = System.Drawing.Color.Magenta;
+						this.DeleteContainer.Name = "DeleteContainer";
+						this.DeleteContainer.Size = new System.Drawing.Size(23, 22);
+						this.DeleteContainer.Click += new System.EventHandler(this.DeleteSelectedContainer);
 						// 
 						// PropertiesPanel
 						// 
@@ -268,62 +310,6 @@
 						this.ToolStrip.Size = new System.Drawing.Size(800, 25);
 						this.ToolStrip.TabIndex = 1;
 						// 
-						// NewContainer
-						// 
-						this.NewContainer.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-						this.NewContainer.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-						this.NewContainer.Image = global::Planner.Properties.Resources.AddControl_16x;
-						this.NewContainer.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-						this.NewContainer.ImageTransparentColor = System.Drawing.Color.Magenta;
-						this.NewContainer.Name = "NewContainer";
-						this.NewContainer.Size = new System.Drawing.Size(23, 22);
-						this.NewContainer.ToolTipText = "New Container";
-						this.NewContainer.Click += new System.EventHandler(this.AddContainer);
-						// 
-						// DeleteContainer
-						// 
-						this.DeleteContainer.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-						this.DeleteContainer.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-						this.DeleteContainer.Image = global::Planner.Properties.Resources.Cancel_16x;
-						this.DeleteContainer.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-						this.DeleteContainer.ImageTransparentColor = System.Drawing.Color.Magenta;
-						this.DeleteContainer.Name = "DeleteContainer";
-						this.DeleteContainer.Size = new System.Drawing.Size(23, 22);
-						this.DeleteContainer.Click += new System.EventHandler(this.DeleteSelectedContainer);
-						// 
-						// NewPlanButton
-						// 
-						this.NewPlanButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-						this.NewPlanButton.Image = global::Planner.Properties.Resources.AddFile_16x;
-						this.NewPlanButton.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-						this.NewPlanButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-						this.NewPlanButton.Name = "NewPlanButton";
-						this.NewPlanButton.Size = new System.Drawing.Size(23, 22);
-						this.NewPlanButton.ToolTipText = "New Plan";
-						this.NewPlanButton.Click += new System.EventHandler(this.NewPlan);
-						// 
-						// NewFolderButton
-						// 
-						this.NewFolderButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-						this.NewFolderButton.Image = global::Planner.Properties.Resources.AddFolder_16x;
-						this.NewFolderButton.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-						this.NewFolderButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-						this.NewFolderButton.Name = "NewFolderButton";
-						this.NewFolderButton.Size = new System.Drawing.Size(23, 22);
-						this.NewFolderButton.ToolTipText = "New Folder";
-						this.NewFolderButton.Click += new System.EventHandler(this.NewFolder);
-						// 
-						// DeleteButton
-						// 
-						this.DeleteButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-						this.DeleteButton.Image = global::Planner.Properties.Resources.Cancel_16x;
-						this.DeleteButton.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
-						this.DeleteButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-						this.DeleteButton.Name = "DeleteButton";
-						this.DeleteButton.Size = new System.Drawing.Size(23, 22);
-						this.DeleteButton.ToolTipText = "Remove Folder/Plan";
-						this.DeleteButton.Click += new System.EventHandler(this.RemoveNode);
-						// 
 						// SmallSaveButton
 						// 
 						this.SmallSaveButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
@@ -352,19 +338,19 @@
 						// NewProjectButton
 						// 
 						this.NewProjectButton.Name = "NewProjectButton";
-						this.NewProjectButton.Size = new System.Drawing.Size(180, 22);
+						this.NewProjectButton.Size = new System.Drawing.Size(144, 22);
 						this.NewProjectButton.Text = "New Project";
 						// 
 						// OpenProjectButton
 						// 
 						this.OpenProjectButton.Name = "OpenProjectButton";
-						this.OpenProjectButton.Size = new System.Drawing.Size(180, 22);
+						this.OpenProjectButton.Size = new System.Drawing.Size(144, 22);
 						this.OpenProjectButton.Text = "Open Project";
 						// 
 						// ProjectSaveSeparator
 						// 
 						this.ProjectSaveSeparator.Name = "ProjectSaveSeparator";
-						this.ProjectSaveSeparator.Size = new System.Drawing.Size(177, 6);
+						this.ProjectSaveSeparator.Size = new System.Drawing.Size(141, 6);
 						// 
 						// SaveButton
 						// 
@@ -372,7 +358,7 @@
 						this.SaveButton.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
 						this.SaveButton.Name = "SaveButton";
 						this.SaveButton.ShortcutKeyDisplayString = "Ctrl + S";
-						this.SaveButton.Size = new System.Drawing.Size(180, 22);
+						this.SaveButton.Size = new System.Drawing.Size(144, 22);
 						this.SaveButton.Text = "Save";
 						// 
 						// SaveAsButton
@@ -380,8 +366,20 @@
 						this.SaveAsButton.Image = global::Planner.Properties.Resources.SaveAs_16x;
 						this.SaveAsButton.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
 						this.SaveAsButton.Name = "SaveAsButton";
-						this.SaveAsButton.Size = new System.Drawing.Size(180, 22);
+						this.SaveAsButton.Size = new System.Drawing.Size(144, 22);
 						this.SaveAsButton.Text = "Save As";
+						// 
+						// FileTree
+						// 
+						this.FileTree.Dock = System.Windows.Forms.DockStyle.Fill;
+						this.FileTree.ImageIndex = 0;
+						this.FileTree.ImageList = this.FileTreeImages;
+						this.FileTree.Location = new System.Drawing.Point(0, 25);
+						this.FileTree.Name = "FileTree";
+						this.FileTree.SelectedImageIndex = 0;
+						this.FileTree.Size = new System.Drawing.Size(222, 400);
+						this.FileTree.TabIndex = 3;
+						this.FileTree.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.SelectPlan);
 						// 
 						// MainWindow
 						// 
@@ -419,7 +417,6 @@
 
 				private System.Windows.Forms.Panel FilePanel;
 				private System.Windows.Forms.Panel DesignerPanel;
-				private System.Windows.Forms.TreeView FileTree;
 				private System.Windows.Forms.Panel PropertiesPanel;
 				private System.Windows.Forms.ToolStrip ToolStrip;
 				private System.Windows.Forms.ToolStrip FileToolStrip;
@@ -447,6 +444,7 @@
 				private System.Windows.Forms.ToolStripSeparator ProjectSaveSeparator;
 				private System.Windows.Forms.ToolStripMenuItem SaveButton;
 				private System.Windows.Forms.ToolStripMenuItem SaveAsButton;
+				private PlanTree FileTree;
 		}
 }
 

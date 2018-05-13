@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml.Linq;
 
 namespace Planner
 {
@@ -36,23 +38,16 @@ namespace Planner
 						}
 				}
 
-				public void DisableProperties()
-				{
-						PropertiesWrapper.Visible = false;
-				}
-
-				public void EnableProperties()
-				{
-						PropertiesWrapper.Visible = true;
-				}
-
 				public void SelectPlan(Object sender, TreeViewEventArgs e)
 				{
-						CustomNode node = (CustomNode)e.Node;
-						if (node.NodeType == TreeNodeType.Plan)
+						if (e.Node is PlanNode)
 						{
-								OpenPlan = ((PlanNode)node).Plan;
-								PlanName.Text = node.Text;
+								OpenPlan = ((PlanNode)e.Node).Plan;
+								if (OpenPlan.SelectedContainer != null)
+								{
+										SetProperties(OpenPlan.SelectedContainer);
+								}
+								PlanName.Text = e.Node.Text;
 								DesignerPanel.Controls.Clear();
 								DesignerPanel.Controls.Add(OpenPlan);
 						}
@@ -98,6 +93,16 @@ namespace Planner
 						}
 				}
 
+				public void DisableProperties()
+				{
+						PropertiesWrapper.Visible = false;
+				}
+
+				public void EnableProperties()
+				{
+						PropertiesWrapper.Visible = true;
+				}
+
 				public void OpenFolderIcon(Object sender, TreeViewCancelEventArgs e)
 				{
 						e.Node.ImageIndex = 1;
@@ -112,22 +117,10 @@ namespace Planner
 
 				public void RemoveNode(Object sender, EventArgs e)
 				{
-						if (FileTree.SelectedNode != null)
+						bool removed = FileTree.RemoveSelectedNode();
+						if (removed)
 						{
-								DialogResult dialogResult;
-								if (((CustomNode)FileTree.SelectedNode).NodeType == TreeNodeType.Folder)
-								{
-										dialogResult = MessageBox.Show("Do you want to delete this folder and all its contents?", "Folder deletion", MessageBoxButtons.YesNo);
-								} else
-								{
-										dialogResult = MessageBox.Show("Do you want to delete this plan?", "Plan deletion", MessageBoxButtons.YesNo);
-								}
-
-								if (dialogResult == DialogResult.Yes)
-								{
-										FileTree.SelectedNode.Remove();
-										CloseOpenPlan();
-								}
+								CloseOpenPlan();
 						}
 				}
 
@@ -161,35 +154,24 @@ namespace Planner
 
 				public void NewFolder(Object sender, EventArgs e)
 				{
-						FindParentAndAdd(TreeNodeType.Folder);
+						FileTree.FindParentAndAdd(new FolderNode("Folder"));
 				}
 
 				public void NewPlan(Object sender, EventArgs e)
 				{
-						FindParentAndAdd(TreeNodeType.Plan);
+						PlanNode node = new PlanNode("Plan", new Plan());
+						node.Plan.OnSelectContainer += SetProperties;
+						node.Plan.AddContainer();
+						FileTree.FindParentAndAdd(node);
+						Debug.WriteLine(FileTree.ToXML());
 				}
 
 				public void AddContainer(Object sender, EventArgs e)
 				{
 						if (OpenPlan != null)
 						{
-								if (DesignerPanel.Controls.OfType<Plan>().ToList()[0] != null)
-								{
-										DesignerPanel.Controls.OfType<Plan>().ToList()[0].AddContainer();
-								}
+								OpenPlan.AddContainer();
 						}
-				}
-
-				public CustomNode GetNodeFromType(TreeNodeType type)
-				{
-						if (type == TreeNodeType.Plan)
-						{
-								PlanNode node = new PlanNode(type.ToString(), new Plan());
-								node.Plan.OnSelectContainer += SetProperties;
-								node.Plan.AddContainer();
-								return node;
-						}
-						return new CustomNode(type.ToString(), type);
 				}
 
 				private void ChangeSelectedRenderMode(RadioButton sender, ContainerRenderMode mode)
@@ -214,32 +196,6 @@ namespace Planner
 				public void RenderModeToLinear(Object sender, EventArgs e)
 				{
 						ChangeSelectedRenderMode((RadioButton)sender, ContainerRenderMode.Linear);
-				}
-
-				public void FindParentAndAdd(TreeNodeType type)
-				{
-						if (FileTree.SelectedNode == null)
-						{
-								CustomNode node = GetNodeFromType(type);
-								FileTree.Nodes.Add(node);
-								FileTree.SelectedNode = node;
-								FileTree.SelectedNode.BeginEdit();
-								return;
-						}
-
-						if (((CustomNode)FileTree.SelectedNode).NodeType == TreeNodeType.Folder)
-						{
-								CustomNode node = GetNodeFromType(type);
-								FileTree.SelectedNode.Nodes.Add(node);
-								FileTree.SelectedNode.Expand();
-								FileTree.SelectedNode = node;
-								FileTree.SelectedNode.BeginEdit();
-						}
-						else
-						{
-								FileTree.SelectedNode = FileTree.SelectedNode.Parent;
-								FindParentAndAdd(type);
-						}
 				}
 		}
 }

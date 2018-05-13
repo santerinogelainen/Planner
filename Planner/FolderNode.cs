@@ -7,19 +7,17 @@ using System.Xml.Linq;
 
 namespace Planner
 {
-		public class PlanNode : CustomNode
+		public class FolderNode : CustomNode
 		{
-
-				public Plan Plan { get; set; }
-
-				public PlanNode(string name, Plan plan) : base(name, TreeNodeType.Plan)
-				{
-						Plan = plan;
-				}
+				public FolderNode(string name) : base(name, TreeNodeType.Folder){}
 
 				public override XElement ToXML()
 				{
-						XElement node = Plan.ToXML();
+						XElement node = new XElement("Folder");
+						foreach (CustomNode childNodes in Nodes)
+						{
+								node.Add(childNodes.ToXML());
+						}
 						node.Add(new XAttribute("name", Text));
 						return node;
 				}
