@@ -236,5 +236,26 @@ namespace Planner
 				{
 						ChangeSelectedRenderMode((RadioButton)sender, ContainerRenderMode.Linear);
 				}
+
+				public void Save(Object sender, EventArgs e)
+				{
+						XElement file = FileTree.ToXML();
+						file.Save(ProjectPath + "/" + ProjectName + ".xml");
+				}
+
+				public void SaveAs(Object sender, EventArgs e)
+				{
+						SaveFileDialog dialog = new SaveFileDialog();
+						dialog.FileName = ProjectName;
+						dialog.AddExtension = true;
+						dialog.Filter = "XML Files (*.xml)|*.xml";
+						dialog.DefaultExt = "xml";
+						dialog.InitialDirectory = ProjectPath;
+						if (dialog.ShowDialog() == DialogResult.OK)
+						{
+								XElement file = FileTree.ToXML();
+								file.Save(dialog.FileName);
+						}
+				}
 		}
 }

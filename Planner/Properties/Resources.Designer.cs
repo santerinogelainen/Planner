@@ -63,39 +63,9 @@ namespace Planner.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Add_256x {
-            get {
-                object obj = ResourceManager.GetObject("Add_256x", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
         internal static System.Drawing.Bitmap AddControl_16x {
             get {
                 object obj = ResourceManager.GetObject("AddControl_16x", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap AddControl_230x {
-            get {
-                object obj = ResourceManager.GetObject("AddControl_230x", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap AddControl_256x {
-            get {
-                object obj = ResourceManager.GetObject("AddControl_256x", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

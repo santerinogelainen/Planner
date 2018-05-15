@@ -31,7 +31,6 @@
 						this.components = new System.ComponentModel.Container();
 						System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindow));
 						this.FilePanel = new System.Windows.Forms.Panel();
-						this.FileTree = new Planner.PlanTree();
 						this.FileTreeImages = new System.Windows.Forms.ImageList(this.components);
 						this.FileToolStrip = new System.Windows.Forms.ToolStrip();
 						this.NewPlanButton = new System.Windows.Forms.ToolStripButton();
@@ -60,6 +59,7 @@
 						this.ProjectSaveSeparator = new System.Windows.Forms.ToolStripSeparator();
 						this.SaveButton = new System.Windows.Forms.ToolStripMenuItem();
 						this.SaveAsButton = new System.Windows.Forms.ToolStripMenuItem();
+						this.FileTree = new Planner.PlanTree();
 						this.FilePanel.SuspendLayout();
 						this.FileToolStrip.SuspendLayout();
 						this.DesignerTools.SuspendLayout();
@@ -78,18 +78,6 @@
 						this.FilePanel.Name = "FilePanel";
 						this.FilePanel.Size = new System.Drawing.Size(222, 425);
 						this.FilePanel.TabIndex = 0;
-						// 
-						// FileTree
-						// 
-						this.FileTree.Dock = System.Windows.Forms.DockStyle.Fill;
-						this.FileTree.ImageIndex = 0;
-						this.FileTree.ImageList = this.FileTreeImages;
-						this.FileTree.Location = new System.Drawing.Point(0, 25);
-						this.FileTree.Name = "FileTree";
-						this.FileTree.SelectedImageIndex = 0;
-						this.FileTree.Size = new System.Drawing.Size(222, 400);
-						this.FileTree.TabIndex = 3;
-						this.FileTree.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.SelectPlan);
 						// 
 						// FileTreeImages
 						// 
@@ -331,6 +319,7 @@
 						this.SmallSaveButton.Name = "SmallSaveButton";
 						this.SmallSaveButton.Size = new System.Drawing.Size(23, 22);
 						this.SmallSaveButton.ToolTipText = "Save (Ctrl + S)";
+						this.SmallSaveButton.Click += new System.EventHandler(this.Save);
 						// 
 						// FileDropDown
 						// 
@@ -350,20 +339,20 @@
 						// NewProjectButton
 						// 
 						this.NewProjectButton.Name = "NewProjectButton";
-						this.NewProjectButton.Size = new System.Drawing.Size(144, 22);
+						this.NewProjectButton.Size = new System.Drawing.Size(180, 22);
 						this.NewProjectButton.Text = "New Project";
 						this.NewProjectButton.Click += new System.EventHandler(this.NewProject);
 						// 
 						// OpenProjectButton
 						// 
 						this.OpenProjectButton.Name = "OpenProjectButton";
-						this.OpenProjectButton.Size = new System.Drawing.Size(144, 22);
+						this.OpenProjectButton.Size = new System.Drawing.Size(180, 22);
 						this.OpenProjectButton.Text = "Open Project";
 						// 
 						// ProjectSaveSeparator
 						// 
 						this.ProjectSaveSeparator.Name = "ProjectSaveSeparator";
-						this.ProjectSaveSeparator.Size = new System.Drawing.Size(141, 6);
+						this.ProjectSaveSeparator.Size = new System.Drawing.Size(177, 6);
 						// 
 						// SaveButton
 						// 
@@ -371,16 +360,30 @@
 						this.SaveButton.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
 						this.SaveButton.Name = "SaveButton";
 						this.SaveButton.ShortcutKeyDisplayString = "Ctrl + S";
-						this.SaveButton.Size = new System.Drawing.Size(144, 22);
+						this.SaveButton.Size = new System.Drawing.Size(180, 22);
 						this.SaveButton.Text = "Save";
+						this.SaveButton.Click += new System.EventHandler(this.Save);
 						// 
 						// SaveAsButton
 						// 
 						this.SaveAsButton.Image = global::Planner.Properties.Resources.SaveAs_16x;
 						this.SaveAsButton.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
 						this.SaveAsButton.Name = "SaveAsButton";
-						this.SaveAsButton.Size = new System.Drawing.Size(144, 22);
+						this.SaveAsButton.Size = new System.Drawing.Size(180, 22);
 						this.SaveAsButton.Text = "Save As";
+						this.SaveAsButton.Click += new System.EventHandler(this.SaveAs);
+						// 
+						// FileTree
+						// 
+						this.FileTree.Dock = System.Windows.Forms.DockStyle.Fill;
+						this.FileTree.ImageIndex = 0;
+						this.FileTree.ImageList = this.FileTreeImages;
+						this.FileTree.Location = new System.Drawing.Point(0, 25);
+						this.FileTree.Name = "FileTree";
+						this.FileTree.SelectedImageIndex = 0;
+						this.FileTree.Size = new System.Drawing.Size(222, 400);
+						this.FileTree.TabIndex = 3;
+						this.FileTree.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.SelectPlan);
 						// 
 						// MainWindow
 						// 
