@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml.Linq;
 
 namespace Planner
 {
@@ -39,7 +40,7 @@ namespace Planner
 								BaseContainer newContainer = FindContainerAtPoint(SelectedContainer, MousePosition);
 								Point selectedScreen = SelectedContainer.PointToScreen(Point.Empty);
 								Point newScreen = newContainer.PointToScreen(Point.Empty);
-								Point difference = new Point(selectedScreen.X - newScreen.X - 8, selectedScreen.Y - newScreen.Y - 8);
+								Point difference = new Point(selectedScreen.X - newScreen.X - 7, selectedScreen.Y - newScreen.Y - 7);
 								SelectedContainer.Location = difference;
 								SelectedContainer.MoveTo(newContainer);
 						}
@@ -78,6 +79,24 @@ namespace Planner
 						parent.Controls.SetChildIndex(PlaceHolder, parent.Controls.IndexOf(replace));
 						PlaceHolder.ParentContainer = parent;
 				}*/
+
+				public override void LoadFromXML(XElement xml)
+				{
+						if (xml.Name != GetType().Name) throw new InvalidXMLException("element name does not equal: " + GetType().Name);
+
+						if (xml.HasElements)
+						{
+								IEnumerable<XElement> elements = xml.Elements();
+								foreach (XElement child in elements)
+								{
+										Container container = new Container();
+										container.OnStartDragging += SelectContainer;
+										container.OnStopDragging += MoveSelectedToBelow;
+										container.LoadFromXML(child);
+										AddChild(container);
+								}
+						}
+				}
 
 				public void AddContainer(string title = "")
 				{

@@ -32,6 +32,11 @@ namespace Planner
 						return 2;
 				}
 
+				public virtual void LoadFromXML(XElement xml)
+				{
+						// implement this in subclasses
+				}
+
 				public virtual XElement ToXML()
 				{
 						XElement node = new XElement("Node");

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -33,7 +34,17 @@ namespace Planner
 
 				public void OpenProject(Object sender, EventArgs e)
 				{
-
+						OpenFileDialog dialog = new OpenFileDialog();
+						dialog.InitialDirectory = Path.GetDirectoryName(Application.ExecutablePath);
+						dialog.Filter = "XML Files (*.xml)|*.xml";
+						
+						if (dialog.ShowDialog() == DialogResult.OK)
+						{
+								MainWindow window = new MainWindow(dialog.FileName);
+								window.FormClosed += (s, args) => Close();
+								window.Show();
+								Hide();
+						}
 				}
 		}
 }

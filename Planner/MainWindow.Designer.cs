@@ -348,6 +348,7 @@
 						this.OpenProjectButton.Name = "OpenProjectButton";
 						this.OpenProjectButton.Size = new System.Drawing.Size(180, 22);
 						this.OpenProjectButton.Text = "Open Project";
+						this.OpenProjectButton.Click += new System.EventHandler(this.OpenProject);
 						// 
 						// ProjectSaveSeparator
 						// 

@@ -181,10 +181,63 @@ namespace Planner
 						newParent.AddChild(this);
 				}
 
+				public override void LoadFromXML(XElement xml)
+				{
+						// check that the xml tag name is Container
+						if (xml.Name != GetType().Name) throw new InvalidXMLException("element name does not equal: " + GetType().Name);
+
+						XAttribute location = xml.Attribute("location");
+						XAttribute size = xml.Attribute("size");
+						XAttribute renderMode = xml.Attribute("renderMode");
+						XAttribute title = xml.Attribute("title");
+						XAttribute text = xml.Attribute("text");
+						if (location == null || renderMode == null || size == null)
+								throw new InvalidXMLException("element for a container does not have attributes 'location' or 'renderMode' or 'size'");
+
+						string[] locationXY = location.Value.Split(',');
+						if (locationXY.Length != 2) throw new InvalidXMLException("container location attribute has too many values, location syntax: x,y");
+
+						// these will throw exceptions if the value is anything other than an integer
+						// maybe in the future we want to use InvalidXMLExeption for these as well
+						int x = int.Parse(locationXY[0]);
+						int y = int.Parse(locationXY[1]);
+						Location = new Point(x, y);
+
+						string[] sizeWH = size.Value.Split(',');
+						if (sizeWH.Length != 2) throw new InvalidXMLException("container size attribute has too many values, size syntax: width,height");
+
+						// these will throw exceptions if the value is anything other than an integer
+						// maybe in the future we want to use TryParse/InvalidXMLExeption for these as well
+						int w = int.Parse(sizeWH[0]);
+						int h = int.Parse(sizeWH[1]);
+						ClientSize = new Size(w, h);
+
+						RenderMode = (ContainerRenderMode)Enum.Parse(typeof(ContainerRenderMode), renderMode.Value);
+
+						// set title and text
+						if (title != null) SetTitle(title.Value);
+						if (text != null) SetText(text.Value);
+
+						// loop children
+						if (xml.HasElements)
+						{
+								IEnumerable<XElement> elements = xml.Elements();
+								foreach (XElement child in elements)
+								{
+										Container container = new Container();
+										container.OnStartDragging = OnStartDragging;
+										container.OnStopDragging = OnStopDragging;
+										container.LoadFromXML(child);
+										AddChild(container);
+								}
+						}
+				}
+
 				public override XElement ToXML()
 				{
 						XElement xml = base.ToXML();
 						xml.Add(new XAttribute("location", Location.X + "," + Location.Y));
+						xml.Add(new XAttribute("size", ClientSize.Width + "," + ClientSize.Height));
 						xml.Add(new XAttribute("renderMode", RenderMode));
 						if (Title != "")
 						{

@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -49,6 +50,11 @@ namespace Planner
 						ProjectIsOpen = true;
 				}
 
+				public MainWindow(string fullpath) : this()
+				{
+						Open(fullpath);
+				}
+
 				public void DeleteSelectedContainer(Object sender, EventArgs e)
 				{
 						if (OpenPlan != null)
@@ -64,15 +70,10 @@ namespace Planner
 						projectSettings.StartPosition = FormStartPosition.CenterParent;
 						projectSettings.OnOk += (string name, string path) =>
 						{
-								if (ProjectIsOpen)
-								{
-								}
-								else
-								{
-										ProjectName = name;
-										ProjectPath = path;
-										ProjectIsOpen = true;
-								}
+								CloseProject();
+								ProjectName = name;
+								ProjectPath = path;
+								ProjectIsOpen = true;
 						};
 						projectSettings.ShowDialog(this);
 				}
@@ -89,6 +90,8 @@ namespace Planner
 								PlanName.Text = e.Node.Text;
 								DesignerPanel.Controls.Clear();
 								DesignerPanel.Controls.Add(OpenPlan);
+								OpenPlan.OnSelectContainer -= SetProperties;
+								OpenPlan.OnSelectContainer += SetProperties;
 						}
 				}
 
@@ -199,7 +202,6 @@ namespace Planner
 				public void NewPlan(Object sender, EventArgs e)
 				{
 						PlanNode node = new PlanNode("Plan", new Plan());
-						node.Plan.OnSelectContainer += SetProperties;
 						node.Plan.AddContainer();
 						FileTree.FindParentAndAdd(node);
 						Debug.WriteLine(FileTree.ToXML());
@@ -237,10 +239,63 @@ namespace Planner
 						ChangeSelectedRenderMode((RadioButton)sender, ContainerRenderMode.Linear);
 				}
 
-				public void Save(Object sender, EventArgs e)
+				public void Open(string fullpath)
+				{
+						// set project save path
+						string path = Path.GetDirectoryName(fullpath);
+						ProjectPath = path;
+
+						// load document
+						XDocument document = XDocument.Load(fullpath);
+
+						// set project name
+						XAttribute name = document.Root.Attribute("name");
+						if (name == null) throw new InvalidXMLException("project root node does not contain a name attribute");
+						ProjectName = name.Value;
+
+						// load filetree from the xml
+						FileTree.LoadFromXML(document.Root);
+						ProjectIsOpen = true;
+				}
+
+				public void CloseProject()
+				{
+						// TODO: make it so that it only asks this if you havent saved already
+						DialogResult result = MessageBox.Show("Do you want to save before closing the current project?", "Save?", MessageBoxButtons.YesNo);
+						if (result == DialogResult.Yes)
+						{
+								Save();
+						}
+						ProjectName = "";
+						ProjectPath = "";
+						ProjectIsOpen = false;
+						FileTree.Nodes.Clear();
+						CloseOpenPlan();
+				}
+
+				public void OpenProject(Object sender, EventArgs e)
+				{
+						OpenFileDialog dialog = new OpenFileDialog();
+						dialog.InitialDirectory = Path.GetDirectoryName(Application.ExecutablePath);
+						dialog.Filter = "XML Files (*.xml)|*.xml";
+
+						if (dialog.ShowDialog() == DialogResult.OK)
+						{
+								CloseProject();
+								Open(dialog.FileName);
+						}
+				}
+
+				public void Save(string fullpath)
 				{
 						XElement file = FileTree.ToXML();
-						file.Save(ProjectPath + "/" + ProjectName + ".xml");
+						file.Add(new XAttribute("name", ProjectName));
+						file.Save(fullpath);
+				}
+
+				public void Save(Object sender = null, EventArgs e = null)
+				{
+						Save(ProjectPath + "/" + ProjectName + ".plan.xml");
 				}
 
 				public void SaveAs(Object sender, EventArgs e)
@@ -249,12 +304,11 @@ namespace Planner
 						dialog.FileName = ProjectName;
 						dialog.AddExtension = true;
 						dialog.Filter = "XML Files (*.xml)|*.xml";
-						dialog.DefaultExt = "xml";
+						dialog.DefaultExt = ".xml";
 						dialog.InitialDirectory = ProjectPath;
 						if (dialog.ShowDialog() == DialogResult.OK)
 						{
-								XElement file = FileTree.ToXML();
-								file.Save(dialog.FileName);
+								Save(dialog.FileName);
 						}
 				}
 		}

@@ -12,9 +12,20 @@ namespace Planner
 
 				public Plan Plan { get; set; }
 
-				public PlanNode(string name, Plan plan) : base(name, TreeNodeType.Plan)
+				public PlanNode(string name = "", Plan plan = null) : base(name, TreeNodeType.Plan)
 				{
 						Plan = plan;
+				}
+
+				public override void LoadFromXML(XElement xml)
+				{
+						Plan = new Plan();
+						Plan.LoadFromXML(xml);
+						XAttribute name = xml.Attribute("name");
+
+						if (name == null) throw new InvalidXMLException("plan dies not contain a name");
+
+						Text = name.Value;
 				}
 
 				public override XElement ToXML()

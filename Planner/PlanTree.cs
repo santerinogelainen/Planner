@@ -62,6 +62,32 @@ namespace Planner
 						SelectedNode.BeginEdit();
 				}
 
+				public void LoadFromXML(XElement xml)
+				{
+						if (xml.Name != "FileTree") throw new InvalidXMLException("element name does not equal: FileTree");
+
+						if (xml.HasElements)
+						{
+								IEnumerable<XElement> elements = xml.Elements();
+								foreach (XElement child in elements)
+								{
+										if (child.Name == "Folder")
+										{
+												FolderNode node = new FolderNode();
+												node.LoadFromXML(child);
+												Nodes.Add(node);
+										}
+										else if (child.Name == "Plan")
+										{
+												PlanNode node = new PlanNode();
+												node.LoadFromXML(child);
+												Nodes.Add(node);
+										}
+										else throw new InvalidXMLException("unknown element type: " + child.Name);
+								}
+						}
+				}
+
 				public XElement ToXML()
 				{
 						XElement fileTree = new XElement("FileTree");

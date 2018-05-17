@@ -72,6 +72,24 @@ namespace Planner
 						RenderChildren();
 				}
 
+				public virtual void LoadFromXML(XElement xml)
+				{
+						if (xml.HasElements)
+						{
+								if (xml.Name != GetType().Name)
+								{
+										throw new InvalidXMLException("element name does not equal: " + GetType().Name);
+								}
+
+								IEnumerable<XElement> elements = xml.Elements();
+								foreach (XElement child in elements)
+								{
+										BaseContainer container = new BaseContainer();
+										AddChild(container);
+								}
+						}
+				}
+
 				public virtual XElement ToXML()
 				{
 						XElement thisContainer = new XElement(GetType().Name);

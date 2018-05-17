@@ -54,6 +54,7 @@
     <Compile Include="CustomNode.cs" />
     <Compile Include="FolderNode.cs" />
     <Compile Include="IContainer.cs" />
+    <Compile Include="InvalidXMLException.cs" />
     <Compile Include="IXMLTransformable.cs" />
     <Compile Include="MainWindow.cs">
       <SubType>Form</SubType>
