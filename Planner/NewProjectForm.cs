@@ -22,6 +22,9 @@ namespace Planner
 						CenterToParent();
 				}
 
+				/// <summary>
+				/// Prevent windows filename illegal characters from the title
+				/// </summary>
 				public void PreventIllegalCharacters(Object sender, KeyPressEventArgs e)
 				{
 						if (!Char.IsControl(e.KeyChar) && (Path.GetInvalidFileNameChars().Contains(e.KeyChar) || Path.GetInvalidPathChars().Contains(e.KeyChar)))
@@ -30,11 +33,17 @@ namespace Planner
 						}
 				}
 
+				/// <summary>
+				/// Closes the form
+				/// </summary>
 				public void CloseForm(Object sender = null, EventArgs e = null)
 				{
 						Close();
 				}
 
+				/// <summary>
+				/// Opens the folder dialog for project location
+				/// </summary>
 				public void OpenFolderDialog(Object sender, EventArgs e)
 				{
 						FolderBrowserDialog dialog = new FolderBrowserDialog();
@@ -54,12 +63,19 @@ namespace Planner
 						}
 				}
 
+				/// <summary>
+				/// Shows an error
+				/// </summary>
+				/// <param name="msg">error message</param>
 				public void ShowError(string msg)
 				{
 						ErrorMsg.Text = msg;
 						ErrorMsg.Visible = true;
 				}
 
+				/// <summary>
+				/// Triggers on ok
+				/// </summary>
 				public void Ok(Object sender, EventArgs e)
 				{
 						if (Directory.Exists(ProjectLocation.Text))

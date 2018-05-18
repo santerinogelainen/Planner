@@ -10,77 +10,119 @@ using System.Xml.Linq;
 
 namespace Planner
 {
-		public class BaseContainer : Panel, IContainer, IXMLTransformable
+		/// <summary>
+		/// Works as a base for other containers. Note! you shouldn't use this on its own even though its not marked as abstract, create a subclass of this, override methods if necessary
+		/// </summary>
+		public class BaseContainer : Panel, IXMLTransformable
 		{
-				public event Action BeforeRender;
-				public event Action<BaseContainer> DuringRender;
-				public event Action AfterRender;
 
-				public IContainer ParentContainer { get; set; }
-				public List<IContainer> Children { get; set; }
+				#region PROPERTIES / VARIABLES
+
+				/// <summary>
+				/// Parent container of this container, can be null
+				/// </summary>
+				public BaseContainer ParentContainer { get; set; }
+				/// <summary>
+				/// Children of this container
+				/// </summary>
+				public List<BaseContainer> Children { get; set; }
+
+				#endregion
+
+				#region CONSTRUCTOR(S)
 
 				public BaseContainer()
 				{
-						Children = new List<IContainer>();
+						Children = new List<BaseContainer>();
 				}
 
-				public virtual BaseContainer FindContainerAtPoint(BaseContainer selected, Point pos)
+				#endregion
+
+				/// <summary>
+				/// Finds the top-most container at the point specified
+				/// </summary>
+				/// <param name="pos">position in screen coordinates</param>
+				/// <param name="ignore">a container that it will ignore even if it is the topmost and under the point</param>
+				/// <returns>The container that is the top most and contains the point</returns>
+				public virtual BaseContainer FindContainerAtPoint(Point pos, BaseContainer ignore = null)
 				{
 						BaseContainer mouse = this;
-						foreach(BaseContainer container in Children)
+						// check if children contain the point
+						foreach(BaseContainer child in Children)
 						{
-								bool isnotselected = container != selected;
-								bool contains = container.ContainsPos(pos);
-								if (container.ContainsPos(pos) && container != selected)
+								// if the child contains the position and is not ignored
+								if (child.ContainsPos(pos) && child != ignore)
 								{
-										return container.FindContainerAtPoint(selected, pos);
+										// find the container in the child
+										return child.FindContainerAtPoint(pos, ignore);
 								}
 						}
 						return mouse;
 				}
 
+				/// <summary>
+				/// Checks if this container contains a position
+				/// </summary>
+				/// <param name="pos">position in screen coordinates</param>
+				/// <returns>true if this container contains the position</returns>
 				public bool ContainsPos(Point pos)
 				{
 						return (Visible && ClientRectangle.Contains(PointToClient(pos)));
 				}
 
-				protected void RenderChildren()
-				{
-						Controls.Clear();
-						BeforeRender?.Invoke();
-						foreach(BaseContainer container in Children)
-						{
-								container.RenderChildren();
-								Controls.Add(container);
-								container.BringToFront();
-								DuringRender?.Invoke(container);
-						}
-						AfterRender?.Invoke();
-				}
+				#region ADD / REMOVE / MOVE
 
-				public void AddChild(IContainer container)
+				/// <summary>
+				/// Adds a child to this container
+				/// </summary>
+				/// <param name="container">Container</param>
+				public void AddChild(BaseContainer container)
 				{
 						container.ParentContainer = this;
 						Children.Add(container);
-						RenderChildren();
+						Controls.Add(container);
+						container.BringToFront();
+						//RenderChildren();
 				}
 
-				public void RemoveChild(IContainer container)
+				/// <summary>
+				/// Move this container to a new parent
+				/// </summary>
+				/// <param name="newParent">new parent</param>
+				public void MoveTo(BaseContainer newParent)
+				{
+						if (ParentContainer != null)
+						{
+								ParentContainer.RemoveChild(this);
+						}
+						newParent.AddChild(this);
+				}
+
+				/// <summary>
+				/// Removes a child from this container
+				/// </summary>
+				/// <param name="container">Container to remove</param>
+				public void RemoveChild(BaseContainer container)
 				{
 						container.ParentContainer = null;
 						Children.Remove(container);
-						RenderChildren();
+						Controls.Remove(container);
+						//RenderChildren();
 				}
 
+				#endregion
+
+				#region XML
+
+				/// <summary>
+				/// Loads the values for this from xml
+				/// </summary>
+				/// <param name="xml">xml element</param>
 				public virtual void LoadFromXML(XElement xml)
 				{
+						if (xml.Name != GetType().Name) throw new InvalidXMLException("element name does not equal: " + GetType().Name, xml);
 						if (xml.HasElements)
 						{
-								if (xml.Name != GetType().Name)
-								{
-										throw new InvalidXMLException("element name does not equal: " + GetType().Name);
-								}
-
 								IEnumerable<XElement> elements = xml.Elements();
 								foreach (XElement child in elements)
 								{
@@ -90,6 +132,10 @@ namespace Planner
 						}
 				}
 
+				/// <summary>
+				/// Transforms this to xml
+				/// </summary>
+				/// <returns>XElement</returns>
 				public virtual XElement ToXML()
 				{
 						XElement thisContainer = new XElement(GetType().Name);
@@ -99,5 +145,7 @@ namespace Planner
 						}
 						return thisContainer;
 				}
+
+				#endregion
 		}
 }

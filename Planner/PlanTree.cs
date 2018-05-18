@@ -11,6 +11,18 @@ namespace Planner
 		public class PlanTree : TreeView, IXMLTransformable
 		{
 
+				public PlanTree() : base() {
+						LabelEdit = true;
+						DoubleClick += (Object sender, EventArgs e) =>
+						{
+								SelectedNode.BeginEdit();
+						};
+				}
+
+				/// <summary>
+				/// Finds the parent of the currently selected node and will add a new node to the parent
+				/// </summary>
+				/// <param name="node">node to be added</param>
 				public void FindParentAndAdd(CustomNode node)
 				{
 						if (SelectedNode == null)
@@ -32,6 +44,10 @@ namespace Planner
 						}
 				}
 
+				/// <summary>
+				/// Removes the selected node
+				/// </summary>
+				/// <returns>true if node was removed</returns>
 				public bool RemoveSelectedNode()
 				{
 						if (SelectedNode != null)
@@ -55,6 +71,11 @@ namespace Planner
 						return false;
 				}
 
+				/// <summary>
+				/// Adds a node to the tree
+				/// </summary>
+				/// <param name="to">where to add the node</param>
+				/// <param name="node">the node added</param>
 				protected void AddNode(TreeNodeCollection to, CustomNode node)
 				{
 						to.Add(node);
@@ -62,6 +83,12 @@ namespace Planner
 						SelectedNode.BeginEdit();
 				}
 
+				#region XML
+
+				/// <summary>
+				/// Loads the values of this plantree from xml
+				/// </summary>
+				/// <param name="xml">xelement</param>
 				public void LoadFromXML(XElement xml)
 				{
 						if (xml.Name != "FileTree") throw new InvalidXMLException("element name does not equal: FileTree");
@@ -88,6 +115,10 @@ namespace Planner
 						}
 				}
 
+				/// <summary>
+				/// Transforms this plantree to xml
+				/// </summary>
+				/// <returns>xelement</returns>
 				public XElement ToXML()
 				{
 						XElement fileTree = new XElement("FileTree");
@@ -97,5 +128,7 @@ namespace Planner
 						}
 						return fileTree;
 				}
+
+				#endregion
 		}
 }

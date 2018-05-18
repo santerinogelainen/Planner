@@ -8,45 +8,27 @@ using System.Xml.Linq;
 
 namespace Planner
 {
-		public class CustomNode : TreeNode, IXMLTransformable
+		public abstract class CustomNode : TreeNode, IXMLTransformable
 		{
-				public TreeNodeType NodeType { get; set; }
-
-				public CustomNode(string name, TreeNodeType type) : base()
+				public CustomNode(string name) : base()
 				{
-						NodeType = type;
 						Text = name;
-						ImageIndex = GetImageIndexFromType(type);
-						SelectedImageIndex = GetImageIndexFromType(type);
 				}
 
-				public int GetImageIndexFromType(TreeNodeType type)
-				{
-						switch(type)
-						{
-								case TreeNodeType.Folder:
-										return 0;
-								case TreeNodeType.Plan:
-										return 2;
-						}
-						return 2;
-				}
+				#region XML
 
-				public virtual void LoadFromXML(XElement xml)
-				{
-						// implement this in subclasses
-				}
+				/// <summary>
+				/// Loads the node values from xml. Implement this in subclasses.
+				/// </summary>
+				/// <param name="xml">xml element</param>
+				public abstract void LoadFromXML(XElement xml);
 
-				public virtual XElement ToXML()
-				{
-						XElement node = new XElement("Node");
-						node.Add(new XAttribute("type", NodeType));
-						node.Add(new XAttribute("name", Text));
-						foreach (CustomNode childNode in Nodes)
-						{
-								node.Add(childNode.ToXML());
-						}
-						return node;
-				}
+				/// <summary>
+				/// Transforms this node into xml
+				/// </summary>
+				/// <returns>xml element</returns>
+				public abstract XElement ToXML();
+
+				#endregion
 		}
 }

@@ -18,6 +18,9 @@ namespace Planner
 						InitializeComponent();
 				}
 
+				/// <summary>
+				/// Create a new project
+				/// </summary>
 				public void NewProject(Object sender, EventArgs e)
 				{
 						NewProjectForm projectSettings = new NewProjectForm();
@@ -32,6 +35,9 @@ namespace Planner
 						projectSettings.ShowDialog(this);
 				}
 
+				/// <summary>
+				/// Open a project
+				/// </summary>
 				public void OpenProject(Object sender, EventArgs e)
 				{
 						OpenFileDialog dialog = new OpenFileDialog();

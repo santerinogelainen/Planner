@@ -9,14 +9,24 @@ namespace Planner
 {
 		public class PlanNode : CustomNode
 		{
-
+				/// <summary>
+				/// The plan of this plannode
+				/// </summary>
 				public Plan Plan { get; set; }
 
-				public PlanNode(string name = "", Plan plan = null) : base(name, TreeNodeType.Plan)
+				public PlanNode(string name = "", Plan plan = null) : base(name)
 				{
 						Plan = plan;
+						ImageIndex = 2;
+						SelectedImageIndex = 2;
 				}
 
+				#region XML
+
+				/// <summary>
+				/// Loads the values to this node from xml
+				/// </summary>
+				/// <param name="xml">xml elemnt</param>
 				public override void LoadFromXML(XElement xml)
 				{
 						Plan = new Plan();
@@ -28,12 +38,18 @@ namespace Planner
 						Text = name.Value;
 				}
 
+				/// <summary>
+				/// Transforms this node to xml
+				/// </summary>
+				/// <returns>xelement</returns>
 				public override XElement ToXML()
 				{
 						XElement node = Plan.ToXML();
 						node.Add(new XAttribute("name", Text));
 						return node;
 				}
+
+				#endregion
 
 		}
 }

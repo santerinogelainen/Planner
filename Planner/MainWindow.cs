@@ -13,10 +13,16 @@ using System.Xml.Linq;
 
 namespace Planner
 {
+		/// <summary>
+		/// The "main" window of the program where all the editing happens
+		/// </summary>
 		public partial class MainWindow : Form
 		{
-				public string projectName;
+				private string projectName;
 
+				/// <summary>
+				/// Project name. Cannot contain letters that the windows file names cannot handle
+				/// </summary>
 				public string ProjectName {
 						get {
 								return projectName;
@@ -26,23 +32,38 @@ namespace Planner
 								Text = value;
 						}
 				}
+
+				/// <summary>
+				/// The path of the project's save location
+				/// </summary>
 				public string ProjectPath { get; set; }
+
+				/// <summary>
+				/// Boolean whether or not a project is open on the editor
+				/// </summary>
 				public bool ProjectIsOpen { get; set; }
+
+				/// <summary>
+				/// The current open plan on designer panel
+				/// </summary>
 				public Plan OpenPlan { get; set; }
 
+				/// <summary>
+				/// Create a new main window with nothing open
+				/// </summary>
 				public MainWindow()
 				{
 						InitializeComponent();
 						ProjectIsOpen = false;
-						FileTree.LabelEdit = true;
-						FileTree.DoubleClick += (Object sender, EventArgs e) =>
-						{
-								FileTree.SelectedNode.BeginEdit();
-						};
 						FileTree.AfterLabelEdit += UpdateDesignerTitle;
 						DisableProperties();
 				}
 
+				/// <summary>
+				/// Create a new main window with a new project
+				/// </summary>
+				/// <param name="name"></param>
+				/// <param name="path"></param>
 				public MainWindow(string name, string path) : this()
 				{
 						ProjectName = name;
@@ -50,11 +71,18 @@ namespace Planner
 						ProjectIsOpen = true;
 				}
 
+				/// <summary>
+				/// Create a mainwindow from xml file
+				/// </summary>
+				/// <param name="fullpath">the full path of the file, containing the filename</param>
 				public MainWindow(string fullpath) : this()
 				{
 						Open(fullpath);
 				}
 
+				/// <summary>
+				/// Deletes the selected container
+				/// </summary>
 				public void DeleteSelectedContainer(Object sender, EventArgs e)
 				{
 						if (OpenPlan != null)
@@ -64,6 +92,9 @@ namespace Planner
 						}
 				}
 
+				/// <summary>
+				/// Create a new project
+				/// </summary>
 				public void NewProject(Object sender, EventArgs e)
 				{
 						NewProjectForm projectSettings = new NewProjectForm();
@@ -78,6 +109,9 @@ namespace Planner
 						projectSettings.ShowDialog(this);
 				}
 
+				/// <summary>
+				/// Select a plan from the treeview
+				/// </summary>
 				public void SelectPlan(Object sender, TreeViewEventArgs e)
 				{
 						if (e.Node is PlanNode)
@@ -95,6 +129,9 @@ namespace Planner
 						}
 				}
 
+				/// <summary>
+				/// Updates the title of the selected container
+				/// </summary>
 				public void UpdateTitle(Object sender, EventArgs e)
 				{
 						if (OpenPlan != null)
@@ -106,6 +143,9 @@ namespace Planner
 						}
 				}
 
+				/// <summary>
+				/// Updates the text of the selected container
+				/// </summary>
 				public void UpdateText(Object sender, EventArgs e)
 				{
 						if (OpenPlan != null)
@@ -117,6 +157,10 @@ namespace Planner
 						}
 				}
 
+				/// <summary>
+				/// Updates the properties panel input values
+				/// </summary>
+				/// <param name="selected">selected container</param>
 				public void SetProperties(Container selected)
 				{
 						EnableProperties();
@@ -135,28 +179,43 @@ namespace Planner
 						}
 				}
 
+				/// <summary>
+				/// Disables / hides the properties panel
+				/// </summary>
 				public void DisableProperties()
 				{
 						PropertiesWrapper.Visible = false;
 				}
 
+				/// <summary>
+				/// Enables / shows the properties panel
+				/// </summary>
 				public void EnableProperties()
 				{
 						PropertiesWrapper.Visible = true;
 				}
 
+				/// <summary>
+				/// Changes the folder icon to open
+				/// </summary>
 				public void OpenFolderIcon(Object sender, TreeViewCancelEventArgs e)
 				{
 						e.Node.ImageIndex = 1;
 						e.Node.SelectedImageIndex = 1;
 				}
 
+				/// <summary>
+				/// Changes the folder icon to closed
+				/// </summary>
 				public void CloseFolderIcon(Object sender, TreeViewCancelEventArgs e)
 				{
 						e.Node.ImageIndex = 0;
 						e.Node.SelectedImageIndex = 0;
 				}
 
+				/// <summary>
+				/// Removes a node from the filetree
+				/// </summary>
 				public void RemoveNode(Object sender, EventArgs e)
 				{
 						bool removed = FileTree.RemoveSelectedNode();
@@ -166,6 +225,9 @@ namespace Planner
 						}
 				}
 
+				/// <summary>
+				/// Updates the designer title when we update the folder/plan name
+				/// </summary>
 				public void UpdateDesignerTitle(Object sender, NodeLabelEditEventArgs e)
 				{
 						if (e.Node is PlanNode)
@@ -183,6 +245,9 @@ namespace Planner
 						}
 				}
 
+				/// <summary>
+				/// Closes the open plan
+				/// </summary>
 				public void CloseOpenPlan()
 				{
 						if (OpenPlan != null)
@@ -194,19 +259,27 @@ namespace Planner
 						}
 				}
 
+				/// <summary>
+				/// Creates a new folder
+				/// </summary>
 				public void NewFolder(Object sender, EventArgs e)
 				{
 						FileTree.FindParentAndAdd(new FolderNode("Folder"));
 				}
 
+				/// <summary>
+				/// Create a new plan
+				/// </summary>
 				public void NewPlan(Object sender, EventArgs e)
 				{
 						PlanNode node = new PlanNode("Plan", new Plan());
 						node.Plan.AddContainer();
 						FileTree.FindParentAndAdd(node);
-						Debug.WriteLine(FileTree.ToXML());
 				}
 
+				/// <summary>
+				/// Adds a container to the open plan
+				/// </summary>
 				public void AddContainer(Object sender, EventArgs e)
 				{
 						if (OpenPlan != null)
@@ -215,6 +288,11 @@ namespace Planner
 						}
 				}
 
+				/// <summary>
+				/// Changes the render mode of the selected container
+				/// </summary>
+				/// <param name="sender">Event sender</param>
+				/// <param name="mode">new render mode</param>
 				private void ChangeSelectedRenderMode(RadioButton sender, ContainerRenderMode mode)
 				{
 						if (OpenPlan != null)
@@ -229,16 +307,26 @@ namespace Planner
 						}
 				}
 
+				/// <summary>
+				/// Changes the selected container's render mode to relative
+				/// </summary>
 				public void RenderModeToRelative(Object sender, EventArgs e)
 				{
 						ChangeSelectedRenderMode((RadioButton)sender, ContainerRenderMode.Relative);
 				}
 
+				/// <summary>
+				/// Changes the selected container's render mode to linear
+				/// </summary>
 				public void RenderModeToLinear(Object sender, EventArgs e)
 				{
 						ChangeSelectedRenderMode((RadioButton)sender, ContainerRenderMode.Linear);
 				}
 
+				/// <summary>
+				/// Open a project
+				/// </summary>
+				/// <param name="fullpath">the full path of the xml file</param>
 				public void Open(string fullpath)
 				{
 						// set project save path
@@ -246,7 +334,7 @@ namespace Planner
 						ProjectPath = path;
 
 						// load document
-						XDocument document = XDocument.Load(fullpath);
+						XDocument document = XDocument.Load(fullpath, LoadOptions.SetLineInfo);
 
 						// set project name
 						XAttribute name = document.Root.Attribute("name");
@@ -258,6 +346,9 @@ namespace Planner
 						ProjectIsOpen = true;
 				}
 
+				/// <summary>
+				/// Closes the project
+				/// </summary>
 				public void CloseProject()
 				{
 						// TODO: make it so that it only asks this if you havent saved already
@@ -273,6 +364,9 @@ namespace Planner
 						CloseOpenPlan();
 				}
 
+				/// <summary>
+				/// Opens a project
+				/// </summary>
 				public void OpenProject(Object sender, EventArgs e)
 				{
 						OpenFileDialog dialog = new OpenFileDialog();
@@ -286,6 +380,10 @@ namespace Planner
 						}
 				}
 
+				/// <summary>
+				/// Saves the project to the fullpath. This will always overwrite old files
+				/// </summary>
+				/// <param name="fullpath">the full path of the saved file</param>
 				public void Save(string fullpath)
 				{
 						XElement file = FileTree.ToXML();
@@ -293,11 +391,17 @@ namespace Planner
 						file.Save(fullpath);
 				}
 
+				/// <summary>
+				/// Saves the project
+				/// </summary>
 				public void Save(Object sender = null, EventArgs e = null)
 				{
-						Save(ProjectPath + "/" + ProjectName + ".plan.xml");
+						Save(ProjectPath + "/" + ProjectName + ".xml");
 				}
 
+				/// <summary>
+				/// Opens the saveas dialog and saves the project. Note! this will change the ProjectPath property
+				/// </summary>
 				public void SaveAs(Object sender, EventArgs e)
 				{
 						SaveFileDialog dialog = new SaveFileDialog();
@@ -308,6 +412,7 @@ namespace Planner
 						dialog.InitialDirectory = ProjectPath;
 						if (dialog.ShowDialog() == DialogResult.OK)
 						{
+								ProjectPath = Path.GetDirectoryName(dialog.FileName);
 								Save(dialog.FileName);
 						}
 				}

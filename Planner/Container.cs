@@ -10,6 +10,9 @@ using System.Xml.Linq;
 
 namespace Planner
 {
+		/// <summary>
+		/// Represents a render mode for container's children
+		/// </summary>
 		public enum ContainerRenderMode
 		{
 				/// <summary>
@@ -22,13 +25,34 @@ namespace Planner
 				Relative
 		}
 
-		public class Container : BaseContainer, IXMLTransformable
+		/// <summary>
+		/// Represents a single container, that can contain other containers, text or a title
+		/// </summary>
+		public class Container : BaseContainer
 		{
 
-				public event Action<Object> OnStartDragging;
+				#region EVENTS
+
+				/// <summary>
+				/// Fires when we mousedown this object
+				/// </summary>
+				public event Action<Container> OnStartDragging;
+				/// <summary>
+				/// Fires when we mouseup on this object
+				/// </summary>
 				public event Action OnStopDragging;
+				/// <summary>
+				/// Fires when we drag the object
+				/// </summary>
 				public event Action OnDrag;
 
+				#endregion
+
+				#region PROPERTIES / VARIABLES
+
+				/// <summary>
+				/// This adds resizeable actions
+				/// </summary>
 				protected override CreateParams CreateParams {
 						get {
 								var cp = base.CreateParams;
@@ -37,125 +61,149 @@ namespace Planner
 						}
 				}
 
+				/// <summary>
+				/// Location of the mouse when we mouse down
+				/// </summary>
 				private Point MouseDownLocation { get; set; }
+
+				/// <summary>
+				/// Boolean of whether or not we are dragging currently
+				/// </summary>
 				private bool Dragging { get; set; }
 
+				/// <summary>
+				/// Render mode of this container
+				/// </summary>
 				public ContainerRenderMode RenderMode { get; private set; }
 
+				/// <summary>
+				/// Title of the container
+				/// </summary>
+				public string Title { get; set; }
 				private Label TitleLabel { get; set; }
-				public string Title { get; private set; }
 
-				private Label TextLabel { get; set; }
+				/// <summary>
+				/// Text of the container
+				/// </summary>
 				public string ContainerText { get; private set; }
+				private Label TextLabel { get; set; }
 
+				#endregion
+
+				#region CONTRUCTOR(S)
+
+				/// <summary>
+				/// Create a container
+				/// </summary>
+				/// <param name="title">optional title for the container</param>
 				public Container(string title = "") : base()
 				{
-						// default render mode
+						// default render mode and add padding
 						RenderMode = ContainerRenderMode.Relative;
-						DuringRender += AdjustRenderedChild;
 						Padding = new Padding(5);
 
-						TitleLabel = new Label();
-						TitleLabel.Font = new Font(TitleLabel.Font, FontStyle.Bold);
-						TitleLabel.Dock = DockStyle.Top;
-						TitleLabel.MouseMove += Drag;
-						TitleLabel.MouseUp += StopDragging;
-						TitleLabel.MouseDown += StartDragging;
-						TitleLabel.AutoSize = true;
-						TitleLabel.Padding = new Padding(0, 0, 0, 5);
-						SetTitle(title);
-
-						TextLabel = new Label();
-						TextLabel.Dock = DockStyle.Top;
-						TextLabel.MouseMove += Drag;
-						TextLabel.MouseUp += StopDragging;
-						TextLabel.MouseDown += StartDragging;
-						TextLabel.Padding = new Padding(0, 0, 0, 5);
-						TextLabel.AutoSize = true;
-						TextLabel.Visible = false;
-						SetText("");
+						// initialize the controls for title and text
+						InitText("");
+						InitTitle(title);
 						
+						// adjust the label widths according to this containers width
 						UpdateLabelSizes();
+						Resize += UpdateLabelSizes;
 
-						BeforeRender += () =>
-						{
-								AddControl(TextLabel);
-								AddControl(TitleLabel);
-						};
-
-						Resize += (Object sender, EventArgs e) =>
-						{
-								UpdateLabelSizes();
-						};
-
-						// min size and default color / border
+						// min size and default color
 						MinimumSize = new Size(100, 50);
 						BackColor = Color.White;
 
+						// initialize drag events
 						MouseMove += Drag;
 						MouseDown += StartDragging;
 						MouseUp += StopDragging;
 				}
 
-				private void AdjustRenderedChild(BaseContainer child)
+				#endregion
+
+				#region RENDER MODE
+
+				/// <summary>
+				/// Adjust the children when render mode is changed
+				/// </summary>
+				private void AdjustChildren()
 				{
 						if (RenderMode == ContainerRenderMode.Linear)
 						{
-								child.Dock = DockStyle.Top;
-								child.Size = new Size(child.ClientSize.Width, child.Size.Height);
+								foreach (Container child in Children)
+								{
+										child.Dock = DockStyle.Top;
+										child.Size = new Size(child.ClientSize.Width, child.Size.Height);
+								}
 						}
 				}
 
-				private void UpdateLabelSizes()
-				{
-						if (TextLabel != null)
-						{
-								TextLabel.MaximumSize = new Size(ClientSize.Width - (Padding.Left + Padding.Right), 0);
-						}
-						if (TitleLabel != null)
-						{
-								TitleLabel.MaximumSize = new Size(ClientSize.Width - (Padding.Left + Padding.Right), 0);
-						}
-				}
-
-				private void AddControl(Control control)
-				{
-						if (control != null)
-						{
-								Controls.Add(control);
-						}
-				}
-
-				public void StartDragging(Object sender, MouseEventArgs e)
-				{
-						Dock = DockStyle.None;
-						MouseDownLocation = e.Location;
-						Dragging = true;
-						OnStartDragging?.Invoke(this);
-				}
-
+				/// <summary>
+				/// Changes the render mode of this container. Note! changing the rendermode means that the CHILDREN render differently, not this container
+				/// </summary>
+				/// <param name="mode"></param>
 				public void ChangeRenderMode(ContainerRenderMode mode)
 				{
 						RenderMode = mode;
-						RenderChildren();
+						AdjustChildren();
 				}
 
-				public void StopDragging(Object sender, MouseEventArgs e)
+				#endregion
+
+				#region TEXT AND LABEL CONTROLS
+
+				/// <summary>
+				/// Inititalizes the text label control
+				/// </summary>
+				/// <param name="text">text</param>
+				private void InitText(string text)
 				{
-						Dragging = false;
-						OnStopDragging?.Invoke();
+						TextLabel = GetNewLabel();
+						Controls.Add(TextLabel);
+						SetText(text);
 				}
 
-				public void Drag(Object sender, MouseEventArgs e)
+				/// <summary>
+				/// Creates a new label with specific styling shared between text and title
+				/// </summary>
+				/// <returns>label</returns>
+				private Label GetNewLabel()
 				{
-						if (Dragging)
-						{
-								Left = e.X + Left - MouseDownLocation.X;
-								Top = e.Y + Top - MouseDownLocation.Y;
-								OnDrag?.Invoke();
-						}
+						Label label = new Label();
+						label.Dock = DockStyle.Top;
+						label.MouseMove += Drag;
+						label.MouseUp += StopDragging;
+						label.MouseDown += StartDragging;
+						label.Padding = new Padding(0, 0, 0, 5);
+						label.AutoSize = true;
+						return label;
 				}
 
+				/// <summary>
+				/// Inititalizes the title label control
+				/// </summary>
+				/// <param name="text">title</param>
+				private void InitTitle(string title)
+				{
+						TitleLabel = GetNewLabel();
+						TitleLabel.Font = new Font(TitleLabel.Font, FontStyle.Bold);
+						Controls.Add(TitleLabel);
+						SetTitle(title);
+				}
+
+				/// <summary>
+				/// Updates the size of the label controls (title and text) to match parent
+				/// </summary>
+				private void UpdateLabelSizes(Object sender = null, EventArgs e = null)
+				{
+						if (TextLabel != null) TextLabel.MaximumSize = new Size(ClientSize.Width - (Padding.Left + Padding.Right), 0);
+						if (TitleLabel != null) TitleLabel.MaximumSize = new Size(ClientSize.Width - (Padding.Left + Padding.Right), 0);
+				}
+
+				/// <summary>
+				/// Set the text of this container
+				/// </summary>
 				public void SetText(string newtext)
 				{
 						ContainerText = newtext;
@@ -164,6 +212,9 @@ namespace Planner
 						TextLabel.Visible = newtext != "";
 				}
 
+				/// <summary>
+				/// Set the title of this container
+				/// </summary>
 				public void SetTitle(string newtitle)
 				{
 						Title = newtitle;
@@ -172,53 +223,100 @@ namespace Planner
 						TitleLabel.Visible = newtitle != "";
 				}
 
-				public void MoveTo(IContainer newParent)
+				#endregion
+
+				#region DRAG EVENT IMPLEMENTATIONS
+
+				/// <summary>
+				/// Event that fires when we mouse down
+				/// </summary>
+				private void StartDragging(Object sender, MouseEventArgs e)
 				{
-						if (ParentContainer != null)
-						{
-								ParentContainer.RemoveChild(this);
-						}
-						newParent.AddChild(this);
+						// remove all dock styles, set location of the mouse, start dragging, and invoke events
+						Dock = DockStyle.None;
+						MouseDownLocation = e.Location;
+						Dragging = true;
+						OnStartDragging?.Invoke(this);
+				}
+				
+				/// <summary>
+				/// Fires when we mouseup
+				/// </summary>
+				private void StopDragging(Object sender, MouseEventArgs e)
+				{
+						// stop dragging and invoke event
+						Dragging = false;
+						OnStopDragging?.Invoke();
 				}
 
+				/// <summary>
+				/// Fires when we mousemove
+				/// </summary>
+				private void Drag(Object sender, MouseEventArgs e)
+				{
+						// only fire if we are dragging
+						if (Dragging)
+						{
+								// set the new location and invoke event
+								Left = e.X + Left - MouseDownLocation.X;
+								Top = e.Y + Top - MouseDownLocation.Y;
+								OnDrag?.Invoke();
+						}
+				}
+
+				#endregion
+
+				#region XML
+
+				/// <summary>
+				/// Loads the containers values from xml. Throws InvalidXMLExceptions if xml is invalid or other exceptions
+				/// </summary>
+				/// <param name="xml">xml element</param>
 				public override void LoadFromXML(XElement xml)
 				{
 						// check that the xml tag name is Container
-						if (xml.Name != GetType().Name) throw new InvalidXMLException("element name does not equal: " + GetType().Name);
+						if (xml.Name != GetType().Name) throw new InvalidXMLException("element name does not equal: " + GetType().Name, xml);
 
+						// load all attributes
 						XAttribute location = xml.Attribute("location");
 						XAttribute size = xml.Attribute("size");
 						XAttribute renderMode = xml.Attribute("renderMode");
 						XAttribute title = xml.Attribute("title");
 						XAttribute text = xml.Attribute("text");
-						if (location == null || renderMode == null || size == null)
-								throw new InvalidXMLException("element for a container does not have attributes 'location' or 'renderMode' or 'size'");
 
+						// check required attributes
+						if (location == null || renderMode == null || size == null)
+								throw new InvalidXMLException("element for a container does not have required attributes 'location' or 'renderMode' or 'size'", xml);
+
+						// split location into two, x and y
 						string[] locationXY = location.Value.Split(',');
-						if (locationXY.Length != 2) throw new InvalidXMLException("container location attribute has too many values, location syntax: x,y");
+						if (locationXY.Length != 2) throw new InvalidXMLException("container location attribute has too many or little values, location syntax: x,y", xml);
 
 						// these will throw exceptions if the value is anything other than an integer
 						// maybe in the future we want to use InvalidXMLExeption for these as well
 						int x = int.Parse(locationXY[0]);
 						int y = int.Parse(locationXY[1]);
+						// set location
 						Location = new Point(x, y);
 
 						string[] sizeWH = size.Value.Split(',');
-						if (sizeWH.Length != 2) throw new InvalidXMLException("container size attribute has too many values, size syntax: width,height");
+						if (sizeWH.Length != 2) throw new InvalidXMLException("container size attribute has too many values, size syntax: width,height", xml);
 
 						// these will throw exceptions if the value is anything other than an integer
 						// maybe in the future we want to use TryParse/InvalidXMLExeption for these as well
 						int w = int.Parse(sizeWH[0]);
 						int h = int.Parse(sizeWH[1]);
+						// set size
 						ClientSize = new Size(w, h);
 
+						// set render mode
 						RenderMode = (ContainerRenderMode)Enum.Parse(typeof(ContainerRenderMode), renderMode.Value);
 
 						// set title and text
 						if (title != null) SetTitle(title.Value);
 						if (text != null) SetText(text.Value);
 
-						// loop children
+						// loop child containers if there are any
 						if (xml.HasElements)
 						{
 								IEnumerable<XElement> elements = xml.Elements();
@@ -233,12 +331,17 @@ namespace Planner
 						}
 				}
 
+				/// <summary>
+				/// Transforms this container into xml
+				/// </summary>
+				/// <returns>xelement</returns>
 				public override XElement ToXML()
 				{
-						XElement xml = base.ToXML();
+						XElement xml = base.ToXML(); // basecontainer does all the work for looping the children
 						xml.Add(new XAttribute("location", Location.X + "," + Location.Y));
 						xml.Add(new XAttribute("size", ClientSize.Width + "," + ClientSize.Height));
 						xml.Add(new XAttribute("renderMode", RenderMode));
+						// only add title and text if there is one
 						if (Title != "")
 						{
 								xml.Add(new XAttribute("title", Title));
@@ -249,5 +352,7 @@ namespace Planner
 						}
 						return xml;
 				}
+
+				#endregion
 		}
 }
