@@ -22,7 +22,9 @@ namespace Planner
 				/// Current selected container
 				/// </summary>
 				public Container SelectedContainer { get; private set; }
-				//public PlaceHolder PlaceHolder { get; set; }
+
+
+				public PlaceHolder PlaceHolder { get; set; }
 
 				public Plan() : base()
 				{
@@ -48,25 +50,46 @@ namespace Planner
 				{
 						if (SelectedContainer != null)
 						{
+								// get the new container of the selected container
 								BaseContainer newContainer = FindContainerAtPoint(MousePosition, SelectedContainer);
+
+								if (newContainer is PlaceHolder) {
+										newContainer = newContainer.ParentContainer;
+										if (newContainer is Container)
+										{
+												Container container = (Container)newContainer;
+												if (container.RenderMode == ContainerRenderMode.Linear)
+												{
+														PlaceHolder.ReplaceWith(SelectedContainer);
+														SelectedContainer.Location = PlaceHolder.Location;
+														RemovePlaceHolder();
+														return;
+												}
+										}
+								}
+
+								// update the location of the selected
 								Point selectedScreen = SelectedContainer.PointToScreen(Point.Empty);
 								Point newScreen = newContainer.PointToScreen(Point.Empty);
 								Point difference = new Point(selectedScreen.X - newScreen.X - 7, selectedScreen.Y - newScreen.Y - 7);
 								SelectedContainer.Location = difference;
+
+								// move to new
 								SelectedContainer.MoveTo(newContainer);
+								RemovePlaceHolder();
 						}
 				}
 
 				/// <summary>
 				/// Moves the selected container to this plan
 				/// </summary>
-				public void MoveSelectedToThis(/*BaseContainer oldContainer*/)
+				public void MoveSelectedToThis()
 				{
 						if (SelectedContainer != null)
 						{
-								SelectedContainer.Location = PointToClient(SelectedContainer.ParentContainer.PointToScreen(SelectedContainer.Location));
+								PutPlaceHolder(SelectedContainer);
+								SelectedContainer.Location = PointToClient(PlaceHolder.ParentContainer.PointToScreen(SelectedContainer.Location));
 								SelectedContainer.MoveTo(this);
-								//SelectedContainer.Location = PointToClient(oldContainer.PointToScreen(SelectedContainer.Location));
 						}
 				}
 
@@ -82,8 +105,8 @@ namespace Planner
 						}
 						SelectedContainer = (Container)sender;
 						SelectedContainer.BackColor = Color.LightYellow;
-						SelectedContainer.BringToFront();
 						MoveSelectedToThis();
+						SelectedContainer.BringToFront();
 						OnSelectContainer?.Invoke(SelectedContainer);
 				}
 
@@ -101,17 +124,22 @@ namespace Planner
 						SelectContainer(container);
 				}
 
-				/*private void PutPlaceHolder(Container replace)
+				private void PutPlaceHolder(Container replace)
 				{
-						PlaceHolder = new PlaceHolder();
-						PlaceHolder.BackColor = Color.Red;
-						PlaceHolder.ClientSize = replace.ClientSize;
-						PlaceHolder.Location = replace.Location;
-						BaseContainer parent = (BaseContainer)replace.ParentContainer;
-						parent.AddChild(PlaceHolder);
-						parent.Controls.SetChildIndex(PlaceHolder, parent.Controls.IndexOf(replace));
-						PlaceHolder.ParentContainer = parent;
-				}*/
+						PlaceHolder = new PlaceHolder(replace);
+				}
+
+				private void RemovePlaceHolder()
+				{
+						if (PlaceHolder != null)
+						{
+								if (PlaceHolder.ParentContainer != null)
+								{
+										PlaceHolder.ParentContainer.RemoveChild(PlaceHolder);
+								}
+								PlaceHolder = null;
+						}
+				}
 
 				#region XML
 

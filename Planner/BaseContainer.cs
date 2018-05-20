@@ -15,6 +15,15 @@ namespace Planner
 		/// </summary>
 		public class BaseContainer : Panel, IXMLTransformable
 		{
+				/// <summary>
+				/// Triggers when we add a new child to this container
+				/// </summary>
+				public event Action<BaseContainer> OnAdd;
+
+				/// <summary>
+				/// Triggers when we remove a child from this container
+				/// </summary>
+				public event Action<BaseContainer> OnRemove;
 
 				#region PROPERTIES / VARIABLES
 
@@ -70,19 +79,19 @@ namespace Planner
 						return (Visible && ClientRectangle.Contains(PointToClient(pos)));
 				}
 
-				#region ADD / REMOVE / MOVE
+				#region ADD / REMOVE / MOVE / REPLACE
 
 				/// <summary>
 				/// Adds a child to this container
 				/// </summary>
 				/// <param name="container">Container</param>
-				public void AddChild(BaseContainer container)
+				public virtual void AddChild(BaseContainer container)
 				{
 						container.ParentContainer = this;
 						Children.Add(container);
 						Controls.Add(container);
 						container.BringToFront();
-						//RenderChildren();
+						OnAdd?.Invoke(container);
 				}
 
 				/// <summary>
@@ -102,12 +111,44 @@ namespace Planner
 				/// Removes a child from this container
 				/// </summary>
 				/// <param name="container">Container to remove</param>
-				public void RemoveChild(BaseContainer container)
+				public virtual void RemoveChild(BaseContainer container)
 				{
 						container.ParentContainer = null;
 						Children.Remove(container);
 						Controls.Remove(container);
-						//RenderChildren();
+						OnRemove?.Invoke(container);
+				}
+
+				/// <summary>
+				/// Replaces this container from the parent with a different container
+				/// </summary>
+				/// <param name="container">container that replaces this container</param>
+				public void ReplaceWith(BaseContainer container)
+				{
+						if (ParentContainer != null)
+						{
+								ParentContainer.ReplaceChild(this, container);
+						}
+				}
+
+				/// <summary>
+				/// Replaces a child (if exists) from children with another child
+				/// </summary>
+				/// <param name="child">child to replace</param>
+				/// <param name="newchild">new container that replaces the child</param>
+				public void ReplaceChild(BaseContainer child, BaseContainer newchild)
+				{
+						if (Children.Contains(child))
+						{
+								int controlindex = Controls.GetChildIndex(child);
+								int childindex = Children.IndexOf(child);
+								Children[childindex] = newchild;
+								newchild.ParentContainer = this;
+								Controls.Add(newchild);
+								Controls.SetChildIndex(newchild, controlindex);
+								Controls.Remove(child);
+								OnAdd?.Invoke(newchild);
+						}
 				}
 
 				#endregion

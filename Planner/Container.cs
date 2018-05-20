@@ -125,16 +125,25 @@ namespace Planner
 				#region RENDER MODE
 
 				/// <summary>
-				/// Adjust the children when render mode is changed
+				/// Adjust the children according to the render mode
 				/// </summary>
-				private void AdjustChildren()
+				public void AdjustChildren()
 				{
-						if (RenderMode == ContainerRenderMode.Linear)
+						if (Children.Count > 0)
 						{
-								foreach (Container child in Children)
+								int height = Children[0].Location.Y;
+								foreach (BaseContainer child in Children)
 								{
-										child.Dock = DockStyle.Top;
-										child.Size = new Size(child.ClientSize.Width, child.Size.Height);
+										if (RenderMode == ContainerRenderMode.Linear)
+										{
+												child.Dock = DockStyle.Top;
+										}
+										else
+										{
+												child.Anchor = AnchorStyles.None;
+												child.Location = new Point(5, height);
+												height += child.Size.Height;
+										}
 								}
 						}
 				}
@@ -146,7 +155,17 @@ namespace Planner
 				public void ChangeRenderMode(ContainerRenderMode mode)
 				{
 						RenderMode = mode;
+						OnAdd -= ChildToLinear;
+						if (RenderMode == ContainerRenderMode.Linear)
+						{
+								OnAdd += ChildToLinear;
+						}
 						AdjustChildren();
+				}
+
+				public void ChildToLinear(BaseContainer child)
+				{
+						child.Dock = DockStyle.Top;
 				}
 
 				#endregion
@@ -233,10 +252,10 @@ namespace Planner
 				private void StartDragging(Object sender, MouseEventArgs e)
 				{
 						// remove all dock styles, set location of the mouse, start dragging, and invoke events
-						Dock = DockStyle.None;
 						MouseDownLocation = e.Location;
 						Dragging = true;
 						OnStartDragging?.Invoke(this);
+						Dock = DockStyle.None;
 				}
 				
 				/// <summary>
@@ -310,7 +329,7 @@ namespace Planner
 						ClientSize = new Size(w, h);
 
 						// set render mode
-						RenderMode = (ContainerRenderMode)Enum.Parse(typeof(ContainerRenderMode), renderMode.Value);
+						ChangeRenderMode((ContainerRenderMode)Enum.Parse(typeof(ContainerRenderMode), renderMode.Value));
 
 						// set title and text
 						if (title != null) SetTitle(title.Value);
