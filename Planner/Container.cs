@@ -255,7 +255,7 @@ namespace Planner
 						MouseDownLocation = e.Location;
 						Dragging = true;
 						OnStartDragging?.Invoke(this);
-						Dock = DockStyle.None;
+						Anchor = AnchorStyles.None;
 				}
 				
 				/// <summary>

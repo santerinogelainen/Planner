@@ -87,8 +87,15 @@ namespace Planner
 				{
 						if (SelectedContainer != null)
 						{
-								PutPlaceHolder(SelectedContainer);
-								SelectedContainer.Location = PointToClient(PlaceHolder.ParentContainer.PointToScreen(SelectedContainer.Location));
+								if (SelectedContainer.ParentContainer is Container && ((Container)SelectedContainer.ParentContainer).RenderMode == ContainerRenderMode.Linear) {
+										PutPlaceHolder(SelectedContainer);
+										SelectedContainer.Location = PointToClient(PlaceHolder.ParentContainer.PointToScreen(SelectedContainer.Location));
+										SelectedContainer.ClientSize = PlaceHolder.ClientSize;
+										SelectedContainer.Size = SelectedContainer.ClientSize;
+								} else
+								{
+										SelectedContainer.Location = PointToClient(SelectedContainer.ParentContainer.PointToScreen(SelectedContainer.Location));
+								}
 								SelectedContainer.MoveTo(this);
 						}
 				}
