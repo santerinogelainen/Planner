@@ -53,6 +53,9 @@
     </Compile>
     <Compile Include="CustomNode.cs" />
     <Compile Include="FolderNode.cs" />
+    <Compile Include="InfiniteScrollPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="InvalidXMLException.cs" />
     <Compile Include="IXMLTransformable.cs" />
     <Compile Include="MainWindow.cs">

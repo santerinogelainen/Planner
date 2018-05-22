@@ -51,25 +51,21 @@ namespace Planner
 				#region PROPERTIES / VARIABLES
 
 				/// <summary>
-				/// This adds resizeable actions
-				/// </summary>
-				protected override CreateParams CreateParams {
-						get {
-								var cp = base.CreateParams;
-								cp.Style |= 0x00040000;  // Turn on WS_BORDER + WS_THICKFRAME
-								return cp;
-						}
-				}
-
-				/// <summary>
 				/// Location of the mouse when we mouse down
 				/// </summary>
 				private Point MouseDownLocation { get; set; }
+
+				private Size MouseDownSize { get; set; }
 
 				/// <summary>
 				/// Boolean of whether or not we are dragging currently
 				/// </summary>
 				private bool Dragging { get; set; }
+
+				/// <summary>
+				/// Boolean true if we started dragging on padding
+				/// </summary>
+				private bool DraggingOnPadding { get; set; }
 
 				/// <summary>
 				/// Render mode of this container
@@ -100,7 +96,8 @@ namespace Planner
 				{
 						// default render mode and add padding
 						RenderMode = ContainerRenderMode.Relative;
-						Padding = new Padding(5);
+						BorderStyle = BorderStyle.FixedSingle;
+						Padding = new Padding(7);
 
 						// initialize the controls for title and text
 						InitText("");
@@ -254,8 +251,10 @@ namespace Planner
 						// remove all dock styles, set location of the mouse, start dragging, and invoke events
 						MouseDownLocation = e.Location;
 						Dragging = true;
+						DraggingOnPadding = PointIsOnPadding(e.Location);
+						MouseDownSize = Size;
 						OnStartDragging?.Invoke(this);
-						Anchor = AnchorStyles.None;
+						Dock = DockStyle.None;
 				}
 				
 				/// <summary>
@@ -274,13 +273,35 @@ namespace Planner
 				private void Drag(Object sender, MouseEventArgs e)
 				{
 						// only fire if we are dragging
+						if (PointIsOnPadding(e.Location))
+						{
+								Cursor = Cursors.SizeNS;
+						}
+						else
+						{
+								Cursor = Cursors.SizeAll;
+						}
 						if (Dragging)
 						{
-								// set the new location and invoke event
-								Left = e.X + Left - MouseDownLocation.X;
-								Top = e.Y + Top - MouseDownLocation.Y;
-								OnDrag?.Invoke();
+								if (DraggingOnPadding)
+								{
+										int x = MouseDownLocation.X - e.X;
+										int y = MouseDownLocation.Y - e.Y;
+										Height = MouseDownSize.Height - y;
+										Width = MouseDownSize.Width - x;
+								} else
+								{
+										// set the new location and invoke event
+										Left = e.X + Left - MouseDownLocation.X;
+										Top = e.Y + Top - MouseDownLocation.Y;
+										OnDrag?.Invoke();
+								}
 						}
+				}
+
+				private bool PointIsOnPadding(Point point)
+				{
+						return !DisplayRectangle.Contains(point);
 				}
 
 				#endregion

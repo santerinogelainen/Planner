@@ -117,6 +117,7 @@ namespace Planner
 						if (e.Node is PlanNode)
 						{
 								OpenPlan = ((PlanNode)e.Node).Plan;
+								OpenPlan.MinimumSize = DesignerPanel.Size;
 								if (OpenPlan.SelectedContainer != null)
 								{
 										SetProperties(OpenPlan.SelectedContainer);

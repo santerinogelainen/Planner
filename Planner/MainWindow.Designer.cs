@@ -37,7 +37,6 @@
 						this.NewPlanButton = new System.Windows.Forms.ToolStripButton();
 						this.NewFolderButton = new System.Windows.Forms.ToolStripButton();
 						this.DeleteButton = new System.Windows.Forms.ToolStripButton();
-						this.DesignerPanel = new System.Windows.Forms.Panel();
 						this.DesignerTools = new System.Windows.Forms.ToolStrip();
 						this.PlanName = new System.Windows.Forms.ToolStripLabel();
 						this.NewContainer = new System.Windows.Forms.ToolStripButton();
@@ -60,6 +59,7 @@
 						this.ProjectSaveSeparator = new System.Windows.Forms.ToolStripSeparator();
 						this.SaveButton = new System.Windows.Forms.ToolStripMenuItem();
 						this.SaveAsButton = new System.Windows.Forms.ToolStripMenuItem();
+						this.DesignerPanel = new Planner.InfiniteScrollPanel();
 						this.FilePanel.SuspendLayout();
 						this.FileToolStrip.SuspendLayout();
 						this.DesignerTools.SuspendLayout();
@@ -144,15 +144,6 @@
 						this.DeleteButton.Size = new System.Drawing.Size(23, 22);
 						this.DeleteButton.ToolTipText = "Remove Folder/Plan";
 						this.DeleteButton.Click += new System.EventHandler(this.RemoveNode);
-						// 
-						// DesignerPanel
-						// 
-						this.DesignerPanel.AutoScroll = true;
-						this.DesignerPanel.Dock = System.Windows.Forms.DockStyle.Fill;
-						this.DesignerPanel.Location = new System.Drawing.Point(222, 25);
-						this.DesignerPanel.Name = "DesignerPanel";
-						this.DesignerPanel.Size = new System.Drawing.Size(349, 425);
-						this.DesignerPanel.TabIndex = 1;
 						// 
 						// DesignerTools
 						// 
@@ -387,6 +378,15 @@
 						this.SaveAsButton.Text = "Save As";
 						this.SaveAsButton.Click += new System.EventHandler(this.SaveAs);
 						// 
+						// DesignerPanel
+						// 
+						this.DesignerPanel.AutoScroll = true;
+						this.DesignerPanel.Dock = System.Windows.Forms.DockStyle.Fill;
+						this.DesignerPanel.Location = new System.Drawing.Point(222, 25);
+						this.DesignerPanel.Name = "DesignerPanel";
+						this.DesignerPanel.Size = new System.Drawing.Size(349, 425);
+						this.DesignerPanel.TabIndex = 0;
+						// 
 						// MainWindow
 						// 
 						this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -422,7 +422,6 @@
 				#endregion
 
 				private System.Windows.Forms.Panel FilePanel;
-				private System.Windows.Forms.Panel DesignerPanel;
 				private System.Windows.Forms.Panel PropertiesPanel;
 				private System.Windows.Forms.ToolStrip ToolStrip;
 				private System.Windows.Forms.ToolStrip FileToolStrip;
@@ -451,6 +450,7 @@
 				private System.Windows.Forms.ToolStripMenuItem SaveButton;
 				private System.Windows.Forms.ToolStripMenuItem SaveAsButton;
 				private PlanTree FileTree;
+				private InfiniteScrollPanel DesignerPanel;
 		}
 }
 

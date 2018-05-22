@@ -28,7 +28,6 @@ namespace Planner
 
 				public Plan() : base()
 				{
-						Dock = DockStyle.Fill;
 				}
 
 				/// <summary>
@@ -70,13 +69,15 @@ namespace Planner
 
 								// update the location of the selected
 								Point selectedScreen = SelectedContainer.PointToScreen(Point.Empty);
-								Point newScreen = newContainer.PointToScreen(Point.Empty);
-								Point difference = new Point(selectedScreen.X - newScreen.X - 7, selectedScreen.Y - newScreen.Y - 7);
+								Point difference = newContainer.PointToClient(selectedScreen);
 								SelectedContainer.Location = difference;
 
 								// move to new
 								SelectedContainer.MoveTo(newContainer);
 								RemovePlaceHolder();
+
+								Debug.WriteLine(Size);
+								Debug.WriteLine(ClientSize);
 						}
 				}
 
