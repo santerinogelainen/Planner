@@ -70,6 +70,9 @@
     <Compile Include="NewProjectForm.Designer.cs">
       <DependentUpon>NewProjectForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="PlanTreeContextMenu.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="PlaceHolder.cs">
       <SubType>Component</SubType>
     </Compile>

@@ -61,14 +61,15 @@ namespace Planner
 						InitializeComponent();
 						ProjectIsOpen = false;
 						FileTree.AfterLabelEdit += UpdateDesignerTitle;
+						FileTree.OnRemove += CloseOpenPlan;
 						DisableProperties();
 				}
 
 				/// <summary>
 				/// Create a new main window with a new project
 				/// </summary>
-				/// <param name="name"></param>
-				/// <param name="path"></param>
+				/// <param name="name">project name</param>
+				/// <param name="path">project path without name</param>
 				public MainWindow(string name, string path) : this()
 				{
 						ProjectName = name;
@@ -224,11 +225,7 @@ namespace Planner
 				/// </summary>
 				public void RemoveNode(Object sender, EventArgs e)
 				{
-						bool removed = FileTree.RemoveSelectedNode();
-						if (removed)
-						{
-								CloseOpenPlan();
-						}
+						FileTree.RemoveSelectedNode();
 				}
 
 				/// <summary>
@@ -270,7 +267,7 @@ namespace Planner
 				/// </summary>
 				public void NewFolder(Object sender, EventArgs e)
 				{
-						FileTree.FindParentAndAdd(new FolderNode("Folder"));
+						FileTree.AddNewFolder();
 				}
 
 				/// <summary>
@@ -278,9 +275,7 @@ namespace Planner
 				/// </summary>
 				public void NewPlan(Object sender, EventArgs e)
 				{
-						PlanNode node = new PlanNode("Plan", new Plan());
-						node.Plan.AddContainer();
-						FileTree.FindParentAndAdd(node);
+						FileTree.AddNewPlan();
 				}
 
 				/// <summary>

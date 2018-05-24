@@ -10,6 +10,20 @@ namespace Planner
 {
 		public class PlanTree : TreeView, IXMLTransformable
 		{
+				/// <summary>
+				/// Triggers when we remove a node
+				/// </summary>
+				public event Action OnRemove;
+
+				/// <summary>
+				/// Triggers when we add a new plan node
+				/// </summary>
+				public event Action OnAddPlan;
+
+				/// <summary>
+				/// Triggers when we add a new folder node
+				/// </summary>
+				public event Action OnAddFolder;
 
 				public PlanTree() : base() {
 						LabelEdit = true;
@@ -17,6 +31,9 @@ namespace Planner
 						{
 								SelectedNode.BeginEdit();
 						};
+						// enable both left and right click for selecting nodes
+						NodeMouseClick += (sender, e) => SelectedNode = e.Node;
+						ContextMenuStrip = new PlanTreeContextMenu(this);
 				}
 
 				/// <summary>
@@ -65,6 +82,7 @@ namespace Planner
 								if (dialogResult == DialogResult.Yes)
 								{
 										SelectedNode.Remove();
+										OnRemove?.Invoke();
 										return true;
 								}
 						}
@@ -81,6 +99,26 @@ namespace Planner
 						to.Add(node);
 						SelectedNode = node;
 						SelectedNode.BeginEdit();
+				}
+
+				/// <summary>
+				/// Adds a new plan node into this tree
+				/// </summary>
+				public void AddNewPlan()
+				{
+						PlanNode node = new PlanNode("Plan", new Plan());
+						node.Plan.AddContainer();
+						FindParentAndAdd(node);
+						OnAddPlan?.Invoke();
+				}
+
+				/// <summary>
+				/// Adds a new folder node to this tree
+				/// </summary>
+				public void AddNewFolder()
+				{
+						FindParentAndAdd(new FolderNode("Folder"));
+						OnAddFolder?.Invoke();
 				}
 
 				#region XML
