@@ -10,6 +10,8 @@ namespace Planner
 {
 		public class PlanTree : TreeView, IXMLTransformable
 		{
+				#region EVENTS
+
 				/// <summary>
 				/// Triggers when we remove a node
 				/// </summary>
@@ -25,6 +27,8 @@ namespace Planner
 				/// </summary>
 				public event Action OnAddFolder;
 
+				#endregion
+
 				public PlanTree() : base() {
 						LabelEdit = true;
 						DoubleClick += (Object sender, EventArgs e) =>
@@ -34,6 +38,8 @@ namespace Planner
 						// enable both left and right click for selecting nodes
 						NodeMouseClick += (sender, e) => SelectedNode = e.Node;
 						ContextMenuStrip = new PlanTreeContextMenu(this);
+						BeforeExpand += OpenFolderIcon;
+						BeforeCollapse += CloseFolderIcon;
 				}
 
 				/// <summary>
@@ -89,6 +95,8 @@ namespace Planner
 						return false;
 				}
 
+				#region ADD NODES
+
 				/// <summary>
 				/// Adds a node to the tree
 				/// </summary>
@@ -120,6 +128,30 @@ namespace Planner
 						FindParentAndAdd(new FolderNode("Folder"));
 						OnAddFolder?.Invoke();
 				}
+
+				#endregion
+
+				#region CHANGE ICON
+
+				/// <summary>
+				/// Changes the folder icon to open
+				/// </summary>
+				public void OpenFolderIcon(Object sender, TreeViewCancelEventArgs e)
+				{
+						e.Node.ImageIndex = 1;
+						e.Node.SelectedImageIndex = 1;
+				}
+
+				/// <summary>
+				/// Changes the folder icon to closed
+				/// </summary>
+				public void CloseFolderIcon(Object sender, TreeViewCancelEventArgs e)
+				{
+						e.Node.ImageIndex = 0;
+						e.Node.SelectedImageIndex = 0;
+				}
+
+				#endregion
 
 				#region XML
 

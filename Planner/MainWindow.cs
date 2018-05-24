@@ -18,6 +18,9 @@ namespace Planner
 		/// </summary>
 		public partial class MainWindow : Form
 		{
+
+				#region VARIABLES, PROPERTIES
+
 				private string projectName;
 
 				/// <summary>
@@ -53,6 +56,10 @@ namespace Planner
 				/// </summary>
 				public Plan OpenPlan { get; set; }
 
+				#endregion
+
+				#region CONSTRUCTORS
+
 				/// <summary>
 				/// Create a new main window with nothing open
 				/// </summary>
@@ -63,6 +70,8 @@ namespace Planner
 						FileTree.AfterLabelEdit += UpdateDesignerTitle;
 						FileTree.OnRemove += CloseOpenPlan;
 						DisableProperties();
+						KeyPreview = true;
+						KeyDown += DetectKeyCombo;
 				}
 
 				/// <summary>
@@ -86,55 +95,36 @@ namespace Planner
 						Open(fullpath);
 				}
 
+				#endregion
+
 				/// <summary>
-				/// Deletes the selected container
+				/// Detects keycomboes and fires events 
 				/// </summary>
-				public void DeleteSelectedContainer(Object sender, EventArgs e)
+				private void DetectKeyCombo(Object sender, KeyEventArgs e)
 				{
-						if (OpenPlan != null)
+						if (e.KeyCode == Keys.Delete)
 						{
-								OpenPlan.DeleteSelectedContainer();
-								DisableProperties();
+								DeleteSelectedContainer();
+								e.SuppressKeyPress = true;
 						}
-				}
 
-				/// <summary>
-				/// Create a new project
-				/// </summary>
-				public void NewProject(Object sender, EventArgs e)
-				{
-						NewProjectForm projectSettings = new NewProjectForm();
-						projectSettings.StartPosition = FormStartPosition.CenterParent;
-						projectSettings.OnOk += (string name, string path) =>
+						if (e.Control)
 						{
-								CloseProject();
-								ProjectName = name;
-								ProjectPath = path;
-								ProjectIsOpen = true;
-						};
-						projectSettings.ShowDialog(this);
-				}
-
-				/// <summary>
-				/// Select a plan from the treeview
-				/// </summary>
-				public void SelectPlan(Object sender, TreeViewEventArgs e)
-				{
-						if (e.Node is PlanNode)
-						{
-								OpenPlan = ((PlanNode)e.Node).Plan;
-								OpenPlan.MinimumSize = DesignerPanel.Size;
-								if (OpenPlan.SelectedContainer != null)
+								switch (e.KeyCode)
 								{
-										SetProperties(OpenPlan.SelectedContainer);
+										case Keys.N:
+												AddContainer();
+												e.SuppressKeyPress = true;
+												break;
+										case Keys.D:
+												DeleteSelectedContainer();
+												e.SuppressKeyPress = true;
+												break;
 								}
-								PlanName.Text = e.Node.Text;
-								DesignerPanel.Controls.Clear();
-								DesignerPanel.Controls.Add(OpenPlan);
-								OpenPlan.OnSelectContainer -= SetProperties;
-								OpenPlan.OnSelectContainer += SetProperties;
 						}
 				}
+
+				#region UPDATES
 
 				/// <summary>
 				/// Updates the title of the selected container
@@ -163,6 +153,31 @@ namespace Planner
 								}
 						}
 				}
+
+				/// <summary>
+				/// Updates the designer title when we update the folder/plan name
+				/// </summary>
+				public void UpdateDesignerTitle(Object sender, NodeLabelEditEventArgs e)
+				{
+						if (e.Node is PlanNode)
+						{
+								if (((PlanNode)e.Node).Plan == OpenPlan)
+								{
+										if (e.Label == null)
+										{
+												PlanName.Text = e.Node.Text;
+										}
+										else
+										{
+												PlanName.Text = e.Label;
+										}
+								}
+						}
+				}
+
+				#endregion
+
+				#region PROPERTIES PANEL
 
 				/// <summary>
 				/// Updates the properties panel input values
@@ -202,51 +217,9 @@ namespace Planner
 						PropertiesWrapper.Visible = true;
 				}
 
-				/// <summary>
-				/// Changes the folder icon to open
-				/// </summary>
-				public void OpenFolderIcon(Object sender, TreeViewCancelEventArgs e)
-				{
-						e.Node.ImageIndex = 1;
-						e.Node.SelectedImageIndex = 1;
-				}
+				#endregion
 
-				/// <summary>
-				/// Changes the folder icon to closed
-				/// </summary>
-				public void CloseFolderIcon(Object sender, TreeViewCancelEventArgs e)
-				{
-						e.Node.ImageIndex = 0;
-						e.Node.SelectedImageIndex = 0;
-				}
-
-				/// <summary>
-				/// Removes a node from the filetree
-				/// </summary>
-				public void RemoveNode(Object sender, EventArgs e)
-				{
-						FileTree.RemoveSelectedNode();
-				}
-
-				/// <summary>
-				/// Updates the designer title when we update the folder/plan name
-				/// </summary>
-				public void UpdateDesignerTitle(Object sender, NodeLabelEditEventArgs e)
-				{
-						if (e.Node is PlanNode)
-						{
-								if (((PlanNode)e.Node).Plan == OpenPlan)
-								{
-										if (e.Label == null)
-										{
-												PlanName.Text = e.Node.Text;
-										} else
-										{
-												PlanName.Text = e.Label;
-										}
-								}
-						}
-				}
+				#region OPEN PLAN
 
 				/// <summary>
 				/// Closes the open plan
@@ -260,6 +233,62 @@ namespace Planner
 								DesignerPanel.Controls.Clear();
 								DisableProperties();
 						}
+				}
+
+				/// <summary>
+				/// Select a plan from the treeview
+				/// </summary>
+				public void SelectPlan(Object sender, TreeViewEventArgs e)
+				{
+						if (e.Node is PlanNode)
+						{
+								OpenPlan = ((PlanNode)e.Node).Plan;
+								OpenPlan.MinimumSize = DesignerPanel.Size;
+								if (OpenPlan.SelectedContainer != null)
+								{
+										SetProperties(OpenPlan.SelectedContainer);
+								}
+								PlanName.Text = e.Node.Text;
+								DesignerPanel.Controls.Clear();
+								DesignerPanel.Controls.Add(OpenPlan);
+								OpenPlan.OnSelectContainer -= SetProperties;
+								OpenPlan.OnSelectContainer += SetProperties;
+						}
+				}
+
+				/// <summary>
+				/// Adds a container to the open plan
+				/// </summary>
+				public void AddContainer(Object sender = null, EventArgs e = null)
+				{
+						if (OpenPlan != null)
+						{
+								OpenPlan.AddContainer();
+						}
+				}
+
+				/// <summary>
+				/// Deletes the selected container
+				/// </summary>
+				public void DeleteSelectedContainer(Object sender = null, EventArgs e = null)
+				{
+						if (OpenPlan != null)
+						{
+								OpenPlan.DeleteSelectedContainer();
+								DisableProperties();
+						}
+				}
+
+				#endregion
+
+				#region  MODIFY PLANTREE
+
+				/// <summary>
+				/// Removes a node from the filetree
+				/// </summary>
+				public void RemoveNode(Object sender = null, EventArgs e = null)
+				{
+						FileTree.RemoveSelectedNode();
 				}
 
 				/// <summary>
@@ -278,16 +307,9 @@ namespace Planner
 						FileTree.AddNewPlan();
 				}
 
-				/// <summary>
-				/// Adds a container to the open plan
-				/// </summary>
-				public void AddContainer(Object sender, EventArgs e)
-				{
-						if (OpenPlan != null)
-						{
-								OpenPlan.AddContainer();
-						}
-				}
+				#endregion
+
+				#region RENDER MODE
 
 				/// <summary>
 				/// Changes the render mode of the selected container
@@ -322,6 +344,27 @@ namespace Planner
 				public void RenderModeToLinear(Object sender, EventArgs e)
 				{
 						ChangeSelectedRenderMode((RadioButton)sender, ContainerRenderMode.Linear);
+				}
+
+				#endregion
+
+				#region SAVE, OPEN, CLOSE, NEW PROJECT
+
+				/// <summary>
+				/// Create a new project
+				/// </summary>
+				public void NewProject(Object sender, EventArgs e)
+				{
+						NewProjectForm projectSettings = new NewProjectForm();
+						projectSettings.StartPosition = FormStartPosition.CenterParent;
+						projectSettings.OnOk += (string name, string path) =>
+						{
+								CloseProject();
+								ProjectName = name;
+								ProjectPath = path;
+								ProjectIsOpen = true;
+						};
+						projectSettings.ShowDialog(this);
 				}
 
 				/// <summary>
@@ -425,5 +468,7 @@ namespace Planner
 								Save(dialog.FileName);
 						}
 				}
+
+				#endregion
 		}
 }

@@ -15,8 +15,6 @@ namespace Planner
 				[STAThread]
 				static void Main()
 				{
-						Debug.WriteLine(SystemInformation.FrameBorderSize);
-
 						Application.EnableVisualStyles();
 						Application.SetCompatibleTextRenderingDefault(false);
 						Application.Run(new StartWindow());

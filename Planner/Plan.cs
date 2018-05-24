@@ -75,9 +75,6 @@ namespace Planner
 								// move to new
 								SelectedContainer.MoveTo(newContainer);
 								RemovePlaceHolder();
-
-								Debug.WriteLine(Size);
-								Debug.WriteLine(ClientSize);
 						}
 				}
 
