@@ -64,11 +64,11 @@
     <Compile Include="MainWindow.Designer.cs">
       <DependentUpon>MainWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="NewProjectForm.cs">
+    <Compile Include="ProjectSettingsForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="NewProjectForm.Designer.cs">
-      <DependentUpon>NewProjectForm.cs</DependentUpon>
+    <Compile Include="ProjectSettingsForm.Designer.cs">
+      <DependentUpon>ProjectSettingsForm.cs</DependentUpon>
     </Compile>
     <Compile Include="PlanTreeContextMenu.cs">
       <SubType>Component</SubType>
@@ -99,8 +99,8 @@
     <EmbeddedResource Include="MainWindow.resx">
       <DependentUpon>MainWindow.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="NewProjectForm.resx">
-      <DependentUpon>NewProjectForm.cs</DependentUpon>
+    <EmbeddedResource Include="ProjectSettingsForm.resx">
+      <DependentUpon>ProjectSettingsForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -143,6 +143,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Folder_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\SettingsFile_16x.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

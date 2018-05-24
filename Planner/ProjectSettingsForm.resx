@@ -117,29 +117,32 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="AddFile_16x" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\AddFile_16x.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="SaveAs_16x" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\SaveAs_16x.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Folder_16x" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Folder_16x.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Cancel_16x" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Cancel_16x.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Save_16x" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Save_16x.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="AddControl_16x" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\AddControl_16x.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="AddFolder_16x" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\AddFolder_16x.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="SettingsFile_16x" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\SettingsFile_16x.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <metadata name="BrowseToolTip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>17, 17</value>
+  </metadata>
+  <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+  <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+    <value>
+        AAABAAEAEBAAAAEAIABoBAAAFgAAACgAAAAQAAAAIAAAAAEAIAAAAAAAAAQAAMMOAADDDgAAAAAAAAAA
+        AAD///8A9vb2EPb29kb29vZv9vb2+/b29vv29vZ39vb2R/b29hD///8A////AP///wD///8A////AP//
+        /wD///8A9vb2//X19f/t7e3/9vb2/4uLi/+Li4v/9vb2/+3t7f/19fX/6+vr/+vr6//r6+v/6+vr/+vr
+        6//r6+v/9vb2//b29v/s7Oz/UFBQ/4uLi/9QUFD/UFBQ/4uLi/9QUFD/7Ozs/2BgYP9CQkL/QkJC/0JC
+        Qv9CQkL/QkJC//b29v/29vb/5ubm/4uLi/+bmpr/7+3u/+/t7v+bmpr/i4uL//b19f/z8fL/8e/w//Hv
+        8P/x7/D/8e/w/0JCQv/29vb/9vb2/4uLi/9QUFD/7+3u/1BQUP9QUFD/7+3u/1BQUP+Li4v/9fT1//Hv
+        8P/x7/D/8e/w//Hv8P9CQkL/9vb2//b29v+Li4v/UFBQ/+/t7v9QUFD/UFBQ/+/t7v9QUFD/i4uL//X0
+        9f/x7/D/8e/w//Hv8P/x7/D/QkJC//b29v/29vb/5ubm/4uLi/+bmpr/7+3u/+/t7v+bmpr/i4uL//b1
+        9f/z8fL/8e/w//Hv8P/x7/D/8e/w/0JCQv/29vb/9vb2/+zs7P9QUFD/i4uL/1BQUP9QUFD/i4uL/1BQ
+        UP/t7e3/8vDx//Hv8P/x7/D/8e/w//Hv8P9CQkL/9vb2//b29v+VlZX/7Ozs//b19f+Li4v/i4uL//b1
+        9f/t7e3/8/Lz//Hv8P/x7/D/8e/w//Hv8P/x7/D/QkJC//b29v/29vb/QkJC//Du7//z8fL/9vX1//b1
+        9f/z8fL/8vDx//Hv8P/x7/D/8e/w//Hv8P/x7/D/8e/w/0JCQv/29vb/9vb2/0JCQv/x7/D/8e/w//Hv
+        8P/x7/D/8e/w//Hv8P/x7/D/8e/w//Hv8P/x7/D/8e/w//Hv8P9CQkL/9vb2//b29v9CQkL/QkJC/0JC
+        Qv9CQkL/QkJC/0JCQv9CQkL/QkJC/0JCQv9CQkL/QkJC/0JCQv9CQkL/QkJC//b29v/29vb/QkJC/0JC
+        Qv9CQkL/QkJC/0JCQv9CQkL/QkJC/0JCQv9CQkL/QkJC/0JCQv9CQkL/QkJC/0JCQv/29vb/9vb2/0JC
+        Qv9CQkL/QkJC/0JCQv9CQkL/QkJC/0JCQv9CQkL/QkJC/0JCQv9CQkL/QkJC/0JCQv9CQkL/9vb2//b2
+        9v/29vb/9vb2//b29v/29vb/9vb2//b29v/29vb/9vb2//b29v/29vb/9vb2//b29v/29vb/9vb2//b2
+        9v////8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP///wD///8A////AP//
+        /wD///8AgH8AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+        AAAAAAAA//8AAA==
+</value>
   </data>
 </root>

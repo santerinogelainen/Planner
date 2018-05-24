@@ -11,16 +11,26 @@ using System.IO;
 
 namespace Planner
 {
-		public partial class NewProjectForm : Form
+		public partial class ProjectSettingsForm : Form
 		{
 				public event Action<string, string> OnOk;
 
-				public NewProjectForm()
+				#region CONSTRUCTORS
+
+				public ProjectSettingsForm()
 				{
 						InitializeComponent();
 						ProjectLocation.Text = Path.GetDirectoryName(Application.ExecutablePath);
 						CenterToParent();
 				}
+
+				public ProjectSettingsForm(string name, string path) : this()
+				{
+						ProjectLocation.Text = path;
+						ProjectName.Text = name;
+				}
+
+				#endregion
 
 				/// <summary>
 				/// Prevent windows filename illegal characters from the title

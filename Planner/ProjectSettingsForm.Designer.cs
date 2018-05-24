@@ -1,6 +1,6 @@
 ﻿namespace Planner
 {
-		partial class NewProjectForm
+		partial class ProjectSettingsForm
 		{
 				/// <summary>
 				/// Required designer variable.
@@ -29,7 +29,7 @@
 				private void InitializeComponent()
 				{
 						this.components = new System.ComponentModel.Container();
-						System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(NewProjectForm));
+						System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ProjectSettingsForm));
 						this.ProjectNameLabel = new System.Windows.Forms.Label();
 						this.ProjectName = new System.Windows.Forms.TextBox();
 						this.ProjectLocationLabel = new System.Windows.Forms.Label();
@@ -117,7 +117,7 @@
 						this.ErrorMsg.TabIndex = 8;
 						this.ErrorMsg.Visible = false;
 						// 
-						// NewProjectForm
+						// ProjectSettingsForm
 						// 
 						this.AcceptButton = this.OkButton;
 						this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -135,8 +135,8 @@
 						this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 						this.MaximizeBox = false;
 						this.MinimizeBox = false;
-						this.Name = "NewProjectForm";
-						this.Text = "New Project";
+						this.Name = "ProjectSettingsForm";
+						this.Text = "Project Settings";
 						this.TopMost = true;
 						this.ResumeLayout(false);
 						this.PerformLayout();

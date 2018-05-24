@@ -23,7 +23,7 @@ namespace Planner
 				/// </summary>
 				public void NewProject(Object sender, EventArgs e)
 				{
-						NewProjectForm projectSettings = new NewProjectForm();
+						ProjectSettingsForm projectSettings = new ProjectSettingsForm();
 						projectSettings.StartPosition = FormStartPosition.CenterScreen;
 						projectSettings.OnOk += (string name, string path) =>
 						{

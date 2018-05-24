@@ -21,6 +21,11 @@ namespace Planner
 
 				#region VARIABLES, PROPERTIES
 
+				/// <summary>
+				/// The file ending of the saved file. should always end with .xml
+				/// </summary>
+				private static string fileEnding = ".xml";
+
 				private string projectName;
 
 				/// <summary>
@@ -37,9 +42,9 @@ namespace Planner
 				}
 
 				/// <summary>
-				/// The full save path of the project
+				/// File name of the project. Contains the file ending
 				/// </summary>
-				public string ProjectFullPath { get; set; }
+				public string FileName { get; set; }
 
 				/// <summary>
 				/// The path of the project's save location without filename
@@ -82,6 +87,7 @@ namespace Planner
 				public MainWindow(string name, string path) : this()
 				{
 						ProjectName = name;
+						FileName = name + fileEnding;
 						ProjectPath = path;
 						ProjectIsOpen = true;
 				}
@@ -348,19 +354,19 @@ namespace Planner
 
 				#endregion
 
-				#region SAVE, OPEN, CLOSE, NEW PROJECT
+				#region SAVE, OPEN, CLOSE, NEW PROJECT, EDIT PROJECT
 
 				/// <summary>
 				/// Create a new project
 				/// </summary>
 				public void NewProject(Object sender, EventArgs e)
 				{
-						NewProjectForm projectSettings = new NewProjectForm();
-						projectSettings.StartPosition = FormStartPosition.CenterParent;
+						ProjectSettingsForm projectSettings = new ProjectSettingsForm();
 						projectSettings.OnOk += (string name, string path) =>
 						{
 								CloseProject();
 								ProjectName = name;
+								FileName = name + fileEnding;
 								ProjectPath = path;
 								ProjectIsOpen = true;
 						};
@@ -374,7 +380,7 @@ namespace Planner
 				public void Open(string fullpath)
 				{
 						// set project fullpath
-						ProjectFullPath = fullpath;
+						FileName = Path.GetFileName(fullpath);
 
 						// set project save path
 						string path = Path.GetDirectoryName(fullpath);
@@ -444,11 +450,7 @@ namespace Planner
 				/// </summary>
 				public void Save(Object sender = null, EventArgs e = null)
 				{
-						if (String.IsNullOrEmpty(ProjectFullPath))
-						{
-								ProjectFullPath = ProjectPath + "/" + ProjectName + ".xml";
-						}
-						Save(ProjectFullPath);
+						Save(ProjectPath + "/" + FileName);
 				}
 
 				/// <summary>
@@ -465,9 +467,23 @@ namespace Planner
 						if (dialog.ShowDialog() == DialogResult.OK)
 						{
 								ProjectPath = Path.GetDirectoryName(dialog.FileName);
-								ProjectFullPath = dialog.FileName;
+								FileName = Path.GetFileName(dialog.FileName);
 								Save(dialog.FileName);
 						}
+				}
+
+				/// <summary>
+				/// Edits the project's settings
+				/// </summary>
+				public void EditProjectSettings(Object sender, EventArgs e)
+				{
+						ProjectSettingsForm projectSettings = new ProjectSettingsForm(ProjectName, ProjectPath);
+						projectSettings.OnOk += (name, path) =>
+						{
+								ProjectName = name;
+								ProjectPath = path;
+						};
+						projectSettings.ShowDialog(this);
 				}
 
 				#endregion
