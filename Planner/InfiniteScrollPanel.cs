@@ -24,8 +24,11 @@ namespace Planner
 						int max = VerticalScroll.Maximum - VerticalScroll.LargeChange - 1;
 						if (VerticalScroll.Value + 100 >= max && e.Delta < 0)
 						{
-								Controls[0].Height -= e.Delta;
-								OnScrollResize?.Invoke();
+								if (Controls.OfType<Plan>().ElementAtOrDefault(0) != null)
+								{
+										Controls[0].Height -= e.Delta;
+										OnScrollResize?.Invoke();
+								}
 						}
 						else
 						{
