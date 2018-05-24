@@ -253,8 +253,11 @@ namespace Planner
 						Dragging = true;
 						DraggingOnPadding = PointIsOnPadding(e.Location);
 						MouseDownSize = Size;
-						OnStartDragging?.Invoke(this);
-						Dock = DockStyle.None;
+						if (!DraggingOnPadding)
+						{
+								OnStartDragging?.Invoke(this);
+								Dock = DockStyle.None;
+						}
 				}
 				
 				/// <summary>
@@ -264,7 +267,10 @@ namespace Planner
 				{
 						// stop dragging and invoke event
 						Dragging = false;
-						OnStopDragging?.Invoke();
+						if (!DraggingOnPadding)
+						{
+								OnStopDragging?.Invoke();
+						}
 				}
 
 				/// <summary>

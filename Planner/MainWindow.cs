@@ -434,6 +434,7 @@ namespace Planner
 				public void Save(string fullpath)
 				{
 						XElement file = FileTree.ToXML();
+						Debug.WriteLine(file);
 						file.Add(new XAttribute("name", ProjectName));
 						file.Save(fullpath);
 				}

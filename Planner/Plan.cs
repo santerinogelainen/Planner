@@ -59,6 +59,7 @@ namespace Planner
 												Container container = (Container)newContainer;
 												if (container.RenderMode == ContainerRenderMode.Linear)
 												{
+														RemoveChild(SelectedContainer);
 														PlaceHolder.ReplaceWith(SelectedContainer);
 														SelectedContainer.Location = PlaceHolder.Location;
 														RemovePlaceHolder();
