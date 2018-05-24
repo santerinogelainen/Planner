@@ -34,7 +34,12 @@ namespace Planner
 				}
 
 				/// <summary>
-				/// The path of the project's save location
+				/// The full save path of the project
+				/// </summary>
+				public string ProjectFullPath { get; set; }
+
+				/// <summary>
+				/// The path of the project's save location without filename
 				/// </summary>
 				public string ProjectPath { get; set; }
 
@@ -330,6 +335,9 @@ namespace Planner
 				/// <param name="fullpath">the full path of the xml file</param>
 				public void Open(string fullpath)
 				{
+						// set project fullpath
+						ProjectFullPath = fullpath;
+
 						// set project save path
 						string path = Path.GetDirectoryName(fullpath);
 						ProjectPath = path;
@@ -397,7 +405,11 @@ namespace Planner
 				/// </summary>
 				public void Save(Object sender = null, EventArgs e = null)
 				{
-						Save(ProjectPath + "/" + ProjectName + ".xml");
+						if (String.IsNullOrEmpty(ProjectFullPath))
+						{
+								ProjectFullPath = ProjectPath + "/" + ProjectName + ".xml";
+						}
+						Save(ProjectFullPath);
 				}
 
 				/// <summary>
@@ -414,6 +426,7 @@ namespace Planner
 						if (dialog.ShowDialog() == DialogResult.OK)
 						{
 								ProjectPath = Path.GetDirectoryName(dialog.FileName);
+								ProjectFullPath = dialog.FileName;
 								Save(dialog.FileName);
 						}
 				}
