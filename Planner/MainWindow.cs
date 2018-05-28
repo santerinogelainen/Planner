@@ -68,7 +68,7 @@ namespace Planner
 				/// <summary>
 				/// Create a new main window with nothing open
 				/// </summary>
-				public MainWindow()
+				private MainWindow()
 				{
 						InitializeComponent();
 						ProjectIsOpen = false;
@@ -77,6 +77,7 @@ namespace Planner
 						DisableProperties();
 						KeyPreview = true;
 						KeyDown += DetectKeyCombo;
+						FormClosing += (o, e) => CloseProject();
 				}
 
 				/// <summary>
