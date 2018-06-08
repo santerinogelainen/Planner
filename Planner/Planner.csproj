@@ -52,7 +52,11 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="CustomNode.cs" />
+    <Compile Include="DoubleSidedStack.cs" />
     <Compile Include="FolderNode.cs" />
+    <Compile Include="History\HistoryEvent.cs" />
+    <Compile Include="History\IHistoryEvent.cs" />
+    <Compile Include="History\MoveContainerEvent.cs" />
     <Compile Include="InfiniteScrollPanel.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -64,6 +68,7 @@
     <Compile Include="MainWindow.Designer.cs">
       <DependentUpon>MainWindow.cs</DependentUpon>
     </Compile>
+    <Compile Include="History\PlanHistory.cs" />
     <Compile Include="ProjectSettingsForm.cs">
       <SubType>Form</SubType>
     </Compile>

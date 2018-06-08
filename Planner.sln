@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.27428.2027
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Planner", "Planner\Planner.csproj", "{1F7304B7-B97D-4F2B-A1FE-2158E6D73AD8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlannerTests", "PlannerTests\PlannerTests.csproj", "{78E1C646-9940-4DC0-838B-839747CDCC40}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{1F7304B7-B97D-4F2B-A1FE-2158E6D73AD8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1F7304B7-B97D-4F2B-A1FE-2158E6D73AD8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1F7304B7-B97D-4F2B-A1FE-2158E6D73AD8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{78E1C646-9940-4DC0-838B-839747CDCC40}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{78E1C646-9940-4DC0-838B-839747CDCC40}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{78E1C646-9940-4DC0-838B-839747CDCC40}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{78E1C646-9940-4DC0-838B-839747CDCC40}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
