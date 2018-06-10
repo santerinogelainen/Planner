@@ -57,6 +57,7 @@
     <Compile Include="History\HistoryEvent.cs" />
     <Compile Include="History\IHistoryEvent.cs" />
     <Compile Include="History\MoveContainerEvent.cs" />
+    <Compile Include="History\ResizeContainerEvent.cs" />
     <Compile Include="InfiniteScrollPanel.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -151,6 +152,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\SettingsFile_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Redo_16x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Undo_16x.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

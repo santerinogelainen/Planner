@@ -127,6 +127,14 @@ namespace Planner
 												DeleteSelectedContainer();
 												e.SuppressKeyPress = true;
 												break;
+										case Keys.Z:
+												Undo();
+												e.SuppressKeyPress = true;
+												break;
+										case Keys.Y:
+												Redo();
+												e.SuppressKeyPress = true;
+												break;
 								}
 						}
 				}
@@ -226,7 +234,7 @@ namespace Planner
 
 				#endregion
 
-				#region OPEN PLAN
+				#region OPEN PLAN / UNDO REDO
 
 				/// <summary>
 				/// Closes the open plan
@@ -284,6 +292,28 @@ namespace Planner
 						{
 								OpenPlan.DeleteSelectedContainer();
 								DisableProperties();
+						}
+				}
+
+				/// <summary>
+				/// Undo the last event that has happend in the currently open plan
+				/// </summary>
+				public void Undo(Object sender = null, EventArgs e = null)
+				{
+						if (OpenPlan != null)
+						{
+								OpenPlan.Undo();
+						}
+				}
+
+				/// <summary>
+				/// Redo the last event that has been undone in the currently open plan
+				/// </summary>
+				public void Redo(Object sender = null, EventArgs e = null)
+				{
+						if (OpenPlan != null)
+						{
+								OpenPlan.Redo();
 						}
 				}
 

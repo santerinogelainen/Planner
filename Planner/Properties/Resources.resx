@@ -124,6 +124,9 @@
   <data name="SaveAs_16x" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\SaveAs_16x.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="SettingsFile_16x" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\SettingsFile_16x.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="Folder_16x" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Folder_16x.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
@@ -139,7 +142,10 @@
   <data name="AddFolder_16x" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\AddFolder_16x.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="SettingsFile_16x" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\SettingsFile_16x.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="Redo_16x" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Redo_16x.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Undo_16x" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Undo_16x.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

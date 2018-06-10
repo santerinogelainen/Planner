@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 
 namespace Planner.History
 {
-		public interface IHasHistory
+		public interface IHistoryEvent
 		{
+
+
 
 				void Undo();
 				void Redo();

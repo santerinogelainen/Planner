@@ -7,6 +7,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.Diagnostics;
 using System.Xml.Linq;
+using Planner.History;
 
 namespace Planner
 {
@@ -73,6 +74,11 @@ namespace Planner
 				public ContainerRenderMode RenderMode { get; private set; }
 
 				/// <summary>
+				/// The plan that contains this container
+				/// </summary>
+				public Plan ParentPlan { get; private set; }
+
+				/// <summary>
 				/// Title of the container
 				/// </summary>
 				public string Title { get; set; }
@@ -84,6 +90,11 @@ namespace Planner
 				public string ContainerText { get; private set; }
 				private Label TextLabel { get; set; }
 
+
+				private ResizeContainerEvent CurrentResizeEvent { get; set; }
+				
+				private MoveContainerEvent CurrentMoveEvent { get; set; }
+
 				#endregion
 
 				#region CONTRUCTOR(S)
@@ -92,8 +103,10 @@ namespace Planner
 				/// Create a container
 				/// </summary>
 				/// <param name="title">optional title for the container</param>
-				public Container(string title = "") : base()
+				public Container(Plan parentPlan, string title = "") : base()
 				{
+						ParentPlan = parentPlan;
+
 						// default render mode and add padding
 						RenderMode = ContainerRenderMode.Relative;
 						BorderStyle = BorderStyle.FixedSingle;
@@ -255,9 +268,16 @@ namespace Planner
 						MouseDownSize = Size;
 						if (!DraggingOnPadding)
 						{
+								// record movement event
+								StartRecordingMovement();
+
 								OnStartDragging?.Invoke(this);
 								Dock = DockStyle.None;
+						} else
+						{
+								StartRecordingResize();
 						}
+						
 				}
 				
 				/// <summary>
@@ -270,6 +290,10 @@ namespace Planner
 						if (!DraggingOnPadding)
 						{
 								OnStopDragging?.Invoke();
+								StopRecordingMovement();
+						} else
+						{
+								StopRecordingResize();
 						}
 				}
 
@@ -308,6 +332,44 @@ namespace Planner
 				private bool PointIsOnPadding(Point point)
 				{
 						return !DisplayRectangle.Contains(point);
+				}
+
+				#endregion
+
+				#region EVENT RECORDING
+
+				private void StartRecordingResize()
+				{
+						ParentPlan.History.RecordEvent(CurrentResizeEvent = new ResizeContainerEvent(this));
+						CurrentResizeEvent.SetStartValues(Size.Width, Size.Height);
+				}
+
+				private void StopRecordingResize()
+				{
+						CurrentResizeEvent.SetEndValues(Size.Width, Size.Height);
+						ParentPlan.History.StopRecording();
+				}
+
+				private void StartRecordingMovement()
+				{
+						ParentPlan.History.RecordEvent(CurrentMoveEvent = new MoveContainerEvent(this));
+						CurrentMoveEvent.SetStartValues(
+								Location.X,
+								Location.Y,
+								ParentContainer,
+								ParentContainer.Controls.IndexOf(this)
+						);
+				}
+
+				private void StopRecordingMovement()
+				{
+						CurrentMoveEvent.SetEndValues(
+								Location.X,
+								Location.Y,
+								ParentContainer,
+								ParentContainer.Controls.IndexOf(this)
+						);
+						ParentPlan.History.StopRecording();
 				}
 
 				#endregion
@@ -368,7 +430,7 @@ namespace Planner
 								IEnumerable<XElement> elements = xml.Elements();
 								foreach (XElement child in elements)
 								{
-										Container container = new Container();
+										Container container = new Container(ParentPlan);
 										container.OnStartDragging = OnStartDragging;
 										container.OnStopDragging = OnStopDragging;
 										container.LoadFromXML(child);

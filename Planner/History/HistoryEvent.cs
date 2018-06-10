@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Planner.History
 {
-		public class HistoryEvent : IHasHistory
+		public class HistoryEvent : IHistoryEvent
 		{
 				public bool IsInThePast { get; set; }
 

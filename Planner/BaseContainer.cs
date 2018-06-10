@@ -94,6 +94,15 @@ namespace Planner
 						OnAdd?.Invoke(container);
 				}
 
+				public virtual void InsertChild(int index, BaseContainer container)
+				{
+						container.ParentContainer = this;
+						Children.Insert(index, container);
+						Controls.Add(container);
+						Controls.SetChildIndex(container, index);
+						OnAdd?.Invoke(container);
+				}
+
 				/// <summary>
 				/// Move this container to a new parent
 				/// </summary>
@@ -105,6 +114,15 @@ namespace Planner
 								ParentContainer.RemoveChild(this);
 						}
 						newParent.AddChild(this);
+				}
+
+				public void MoveTo(BaseContainer newParent, int index)
+				{
+						if (ParentContainer != null)
+						{
+								ParentContainer.RemoveChild(this);
+						}
+						newParent.InsertChild(index, this);
 				}
 
 				/// <summary>

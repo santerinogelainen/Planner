@@ -60,6 +60,8 @@
 						this.ProjectSaveSeparator = new System.Windows.Forms.ToolStripSeparator();
 						this.SaveButton = new System.Windows.Forms.ToolStripMenuItem();
 						this.SaveAsButton = new System.Windows.Forms.ToolStripMenuItem();
+						this.RedoButton = new System.Windows.Forms.ToolStripButton();
+						this.UndoButton = new System.Windows.Forms.ToolStripButton();
 						this.DesignerPanel = new Planner.InfiniteScrollPanel();
 						this.FilePanel.SuspendLayout();
 						this.FileToolStrip.SuspendLayout();
@@ -310,7 +312,9 @@
 						this.ToolStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
 						this.ToolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.SmallSaveButton,
-            this.FileDropDown});
+            this.FileDropDown,
+            this.RedoButton,
+            this.UndoButton});
 						this.ToolStrip.Location = new System.Drawing.Point(0, 0);
 						this.ToolStrip.Name = "ToolStrip";
 						this.ToolStrip.Size = new System.Drawing.Size(800, 25);
@@ -391,6 +395,30 @@
 						this.SaveAsButton.Text = "Save As";
 						this.SaveAsButton.Click += new System.EventHandler(this.SaveAs);
 						// 
+						// RedoButton
+						// 
+						this.RedoButton.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+						this.RedoButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+						this.RedoButton.Image = global::Planner.Properties.Resources.Redo_16x;
+						this.RedoButton.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+						this.RedoButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+						this.RedoButton.Name = "RedoButton";
+						this.RedoButton.Size = new System.Drawing.Size(23, 22);
+						this.RedoButton.ToolTipText = "Redo";
+						this.RedoButton.Click += new System.EventHandler(this.Redo);
+						// 
+						// UndoButton
+						// 
+						this.UndoButton.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+						this.UndoButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+						this.UndoButton.Image = global::Planner.Properties.Resources.Undo_16x;
+						this.UndoButton.ImageScaling = System.Windows.Forms.ToolStripItemImageScaling.None;
+						this.UndoButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+						this.UndoButton.Name = "UndoButton";
+						this.UndoButton.Size = new System.Drawing.Size(23, 22);
+						this.UndoButton.ToolTipText = "Undo";
+						this.UndoButton.Click += new System.EventHandler(this.Undo);
+						// 
 						// DesignerPanel
 						// 
 						this.DesignerPanel.AutoScroll = true;
@@ -465,6 +493,8 @@
 				private PlanTree FileTree;
 				private InfiniteScrollPanel DesignerPanel;
 				private System.Windows.Forms.ToolStripMenuItem EditProjectSettingsButton;
+				private System.Windows.Forms.ToolStripButton RedoButton;
+				private System.Windows.Forms.ToolStripButton UndoButton;
 		}
 }
 

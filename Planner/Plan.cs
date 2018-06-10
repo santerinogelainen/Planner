@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Planner.History;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
@@ -23,11 +24,19 @@ namespace Planner
 				/// </summary>
 				public Container SelectedContainer { get; private set; }
 
-
+				/// <summary>
+				/// A placeholder for a container, can be null
+				/// </summary>
 				public PlaceHolder PlaceHolder { get; set; }
+
+				/// <summary>
+				/// the event history for this plan
+				/// </summary>
+				public PlanHistory History { get; private set; }
 
 				public Plan() : base()
 				{
+						History = new PlanHistory(this, 100);
 				}
 
 				/// <summary>
@@ -49,6 +58,7 @@ namespace Planner
 				{
 						if (SelectedContainer != null)
 						{
+
 								// get the new container of the selected container
 								BaseContainer newContainer = FindContainerAtPoint(MousePosition, SelectedContainer);
 
@@ -59,6 +69,8 @@ namespace Planner
 												Container container = (Container)newContainer;
 												if (container.RenderMode == ContainerRenderMode.Linear)
 												{
+														// discard the last moveevent that was recorded by the container
+														History.DiscardLastEvent();
 														RemoveChild(SelectedContainer);
 														PlaceHolder.ReplaceWith(SelectedContainer);
 														SelectedContainer.Location = PlaceHolder.Location;
@@ -122,7 +134,7 @@ namespace Planner
 				/// <param name="title">container title</param>
 				public void AddContainer(string title = "")
 				{
-						Container container = new Container(title);
+						Container container = new Container(this, title);
 						container.Location = new Point(50, 50);
 						container.OnStartDragging += SelectContainer;
 						container.OnStopDragging += MoveSelectedToBelow;
@@ -130,11 +142,18 @@ namespace Planner
 						SelectContainer(container);
 				}
 
+				/// <summary>
+				/// Replace a container with a placeholder
+				/// </summary>
+				/// <param name="replace">container to replace</param>
 				private void PutPlaceHolder(Container replace)
 				{
 						PlaceHolder = new PlaceHolder(replace);
 				}
 
+				/// <summary>
+				/// Remove the placeholder from the plan
+				/// </summary>
 				private void RemovePlaceHolder()
 				{
 						if (PlaceHolder != null)
@@ -145,6 +164,22 @@ namespace Planner
 								}
 								PlaceHolder = null;
 						}
+				}
+
+				/// <summary>
+				/// Undo the last event
+				/// </summary>
+				public void Undo()
+				{
+						History.Undo();
+				}
+
+				/// <summary>
+				/// Redo the last undone event
+				/// </summary>
+				public void Redo()
+				{
+						History.Redo();
 				}
 
 				#region XML
@@ -162,7 +197,7 @@ namespace Planner
 								IEnumerable<XElement> elements = xml.Elements();
 								foreach (XElement child in elements)
 								{
-										Container container = new Container();
+										Container container = new Container(this);
 										container.OnStartDragging += SelectContainer;
 										container.OnStopDragging += MoveSelectedToBelow;
 										container.LoadFromXML(child);
